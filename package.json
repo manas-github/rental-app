@@ -1,0 +1,42 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@ant-design/icons-react-native": "^1.0.2",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "axios": "^0.18.0",
+    "expo": "^32.0.0",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
+    "native-base": "^2.12.0",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-app-intro-slider": "^1.0.1",
+    "react-native-collapsible": "^1.4.0",
+    "react-native-elements": "^1.0.0",
+    "react-native-grid-component": "^1.1.0",
+    "react-native-grid-list": "^1.0.9",
+    "react-native-image-slider": "^2.0.3",
+    "react-native-indicators": "^0.13.0",
+    "react-native-keychain": "^3.1.1",
+    "react-native-loading-spinner-overlay": "^1.0.1",
+    "react-native-modal-dropdown": "^0.6.2",
+    "react-native-navigation": "^2.10.0",
+    "react-native-router-flux": "^4.0.6",
+    "react-native-side-drawer": "^1.0.9",
+    "react-native-snap-carousel": "^3.7.5",
+    "react-native-vector-icons": "^6.3.0",
+    "react-native-video": "^4.3.1",
+    "react-navigation": "^3.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^11.9.5",
+    "babel-preset-expo": "^5.0.0"
+  },
+  "private": true
+}
