@@ -9,13 +9,13 @@
   "dependencies": {
     "@ant-design/icons-react-native": "^1.0.2",
     "@babel/plugin-proposal-decorators": "^7.3.0",
-    "axios": "^0.18.0",
-    "expo": "^32.0.0",
+    "axios": "^0.18.1",
+    "expo": "^33.0.0",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
-    "native-base": "^2.12.0",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "native-base": "^2.13.8",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-app-intro-slider": "^1.0.1",
     "react-native-collapsible": "^1.4.0",
     "react-native-elements": "^1.0.0",
@@ -32,7 +32,8 @@
     "react-native-snap-carousel": "^3.7.5",
     "react-native-vector-icons": "^6.3.0",
     "react-native-video": "^4.3.1",
-    "react-navigation": "^3.1.2"
+    "react-navigation": "^3.1.2",
+    "react-native-gesture-handler": "~1.3.0"
   },
   "devDependencies": {
     "@types/node": "^11.9.5",
