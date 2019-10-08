@@ -1,7 +1,7 @@
 import axios from "axios";
 import {AsyncStorage} from 'react-native';
 
-const baseUrl = "http://127.0.0.1:8083/api";
+const baseUrl = "http://192.168.0.126:8184/api/v1";
 
 export class Api {
     constructor(){}
@@ -10,6 +10,66 @@ export class Api {
         return `${baseUrl}${endpoint}`
     }
 
+    getProductList = async (productType : String) => {
+        let url = this.makeUrl("/product/"+(productType.toLowerCase()))
+        return axios.get(url)
+    }
+
+    getProduct = async (productId) => {
+        let url = this.makeUrl('/product/'+productId)
+        return axios.get(url)
+    }
+    getCartItemCount = async() => {
+        let url = this.makeUrl("/cart/getCartItemCount")
+        return axios.post(url, {
+            email : "manas.rishav@gmail.com"
+          });
+       
+    }
+
+    addProductToCart = async (productId,duration) => {
+        let url = this.makeUrl("/cart/addProduct")
+        return axios.patch(url,{
+                "duration": duration,
+                "email": "manas.rishav@gmail.com",
+                "productId": productId
+              
+        })
+    }
+
+    increaseCartItemQuantity = async(productId,duration) => {
+        let url = this.makeUrl("/cart/increaseQuantity")
+        return axios.patch(url,{
+            email : "manas.rishav@gmail.com",
+            duration : duration,
+            productId : productId
+        })
+    }
+
+    decreaseCartItemQuantity = async(productId,duration) => {
+        let url = this.makeUrl("/cart/decreaseQuantity")
+        return axios.patch(url,{
+            email : "manas.rishav@gmail.com",
+            duration : duration,
+            productId : productId
+        })
+    }
+
+    removeCartItem = async (productId, duration) => {
+        let url = this.makeUrl('/cart/removeProduct')
+        return axios.patch(url,{
+            email : "manas.rishav@gmail.com",
+            duration : duration,
+            productId : productId
+        })
+    }
+
+    getCart = async() => {
+        let url = this.makeUrl("/cart")
+        return axios.post( url,{
+            email : "manas.rishav@gmail.com"
+        });
+    }
     getUserToken =async () => {
         let userToken = ''
         try {

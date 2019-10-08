@@ -4,8 +4,10 @@ import {observable, values} from 'mobx'
 import { observer } from "mobx-react"
 import ProductImageSlider from './productImageSlider'
 import {DEVICE_DIMENSIONS,Toast} from './../../constant'
+import { BallIndicator,BarIndicator,DotIndicator,MaterialIndicator, PacmanIndicator, PulseIndicator, SkypeIndicator, UIActivityIndicator, WaveIndicator  } from 'react-native-indicators';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Api } from '../../api/api';
 
 
 interface props{
@@ -22,61 +24,79 @@ export default class ProductDetails extends React.Component<props,any> {
   }
 
   @observable productId = (this as any).props.navigation.getParam('productId');
-  @observable details = {id :'101',title : 'Upholstered Storage Double Bed',description:'A reliable yet simplistic upholstered bed with storage. It promotes comfort as well as provides extra space for storage.',images:{},tenure:['3','6','9','12','18','24'],price:[800,750,650,600,550,485]};
-  @observable tenureSelected = this.details.tenure[this.details.tenure.length-1];
+  @observable tenureSelected :any;
   @observable quantitySelected = 0;
-  @observable priceSelected = this.details.price[this.details.tenure.length-1]
-  @observable cartItems = {id :['105','104'] , tenure :['3','9'], quantity :[1,2]}
+  @observable priceSelected  :any
   @observable modalVisible = false;
   @observable showToast = false;
+  @observable api = new Api()
+  @observable product : any= {}
+  @observable isLoaded : boolean = false
 
-  addToCartPressed = () =>{
-    let isFound = false;
-    for(let i=0;i<this.cartItems.id.length;i++){
-      if(this.details.id === this.cartItems.id[i] && this.tenureSelected==this.cartItems.tenure[i]){
-        isFound = true
+
+
+  componentDidMount = async() => {
+    try {
+      const res = await this.api.getProduct(this.productId);
+      if (res && res.data) {
+          this.product = res.data
+          this.isLoaded = true
+          this.selectTenure(Object.keys(this.product.price)[0])
       }
-    }
-    if(!isFound){
-      this.cartItems.id.push(this.details.id)
-      this.cartItems.tenure.push(this.tenureSelected)
-      this.cartItems.quantity.push(1)
-   //   alert("Added to cart")
-      this.showToast = true
-      setTimeout(() => {
-        this.showToast = false
-      }, 2500);
-    }
-    else{
-      alert('Item already present in cart')
-    }
+  }  catch (error) {
+        console.log(error);     
+  }
   }
 
-  selectTenure = (index) =>{
-    this.tenureSelected = this.details.tenure[index]
-    this.priceSelected = this.details.price[index]
+  addToCartPressed = async () =>{
+    try{
+      const res = await this.api.addProductToCart(this.productId,this.tenureSelected)
+      if(res && res.data) {
+        console.log(res.data)
+      }
+    } catch(error){
+      console.log(error)
+    }
+
+  }
+
+  selectTenure = (duration) =>{
+    this.tenureSelected = duration
+    this.priceSelected = this.product.price[duration]
   }
   
-  renderTenure =(val,index) => {
-    if(this.details.tenure[index] == this.tenureSelected)
+  renderTenure =(duration,index) => {
+    if(duration == this.tenureSelected)
       return(
         <View style={{opacity:0.2}} key={index}>
-        <TouchableOpacity disabled={true} style={styles.tenureBlock} key={index} onPress={() => this.selectTenure(index)}>
-            <Text style={styles.tenureText}>{val}</Text>
+        <TouchableOpacity disabled={true} style={styles.tenureBlock} key={index} onPress={() => this.selectTenure(duration)}>
+            <Text style={styles.tenureText}>{duration}</Text>
         </TouchableOpacity>
         </View>
       )
     else
       return(
         <View style={{opacity:1}} key={index}>
-      <TouchableOpacity style={styles.tenureBlock} key={index} onPress={() => this.selectTenure(index)}>
-        <Text style={styles.tenureText}>{val}</Text>
+      <TouchableOpacity style={styles.tenureBlock} key={index} onPress={() => this.selectTenure(duration)}>
+        <Text style={styles.tenureText}>{duration}</Text>
       </TouchableOpacity>
         </View>
     )    
   }
 
   render() {
+    if(!this.isLoaded)
+    return (
+      <View style={{justifyContent:'center',alignItems:'center',marginTop:DEVICE_DIMENSIONS.height/2-10}}>
+          <BarIndicator 
+              color='orange' 
+              animationDuration={800}
+              count={20}
+              size={20}
+          />
+      </View>
+      );
+  else
     return (
         <View style={{flex:1,opacity:this.modalVisible?0.1:1.0}}>
         <ScrollView>
@@ -84,11 +104,11 @@ export default class ProductDetails extends React.Component<props,any> {
               <ProductImageSlider/>
             </View>
 
-            <Text style={styles.title}>{this.details.title.toUpperCase()}{this.productId}</Text>
-            <Text style={styles.description}>{this.details.description}</Text>
+            <Text style={styles.title}>{this.product.title.toUpperCase()}</Text>
+            <Text style={styles.description}>{this.product.description}</Text>
             <Text style={styles.tenureTitle}>Select tenure (in months) </Text>
             <View style={styles.tenure}>
-                {this.details.tenure.map((val,index)=>this.renderTenure(val,index))}
+                {Object.keys(this.product.price).map((duration,index)=>this.renderTenure(duration,index))}
             </View>
             <View style={styles.rentAndDeposit}>
               <Text style={styles.rent}>Rent : &#8377; {this.priceSelected}</Text>
@@ -102,7 +122,7 @@ export default class ProductDetails extends React.Component<props,any> {
 
             <ContentDivider/>
             <View style={styles.ourPromise}>
-               <Text style={styles.ourPromiseTitle}>Voorent Promise</Text>
+               <Text style={styles.ourPromiseTitle}>Our Promise</Text>
                <View style={{flexDirection:'row'}}>
                 <View style={{flex:0.15,alignItems:'center'}}>
                 <Icon 

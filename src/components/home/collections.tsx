@@ -30,13 +30,13 @@ class Collections extends React.Component<props, any> {
 
     return (
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => this.navigateToProductList('furniture')}>
+          <TouchableOpacity onPress={() => this.navigateToProductList('furnitures')}>
             <Image source={require('./../../assets/images/furniture.png')} resizeMode="contain" style={styles.image}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.navigateToProductList('appliance')}>
+          <TouchableOpacity onPress={() => this.navigateToProductList('appliances')}>
             <Image source={require('./../../assets/images/appliance.png')} resizeMode="contain" style={styles.image}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.navigateToProductList('package')}>
+          <TouchableOpacity onPress={() => this.navigateToProductList('packages')}>
             <Image source={require('./../../assets/images/package.png')} resizeMode="contain" style={styles.image}/>
           </TouchableOpacity>
         </View>
