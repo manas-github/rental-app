@@ -3,8 +3,10 @@ import { StyleSheet, View,TextInput,AsyncStorage,ImageBackground,Platform,Toucha
 import Icon from 'react-native-vector-icons/Ionicons';
 import {observable} from 'mobx'
 import { observer } from "mobx-react"
-import {DEVICE_DIMENSIONS} from './../constant'
+import {DEVICE_DIMENSIONS, Toast} from './../constant'
 import {Api} from './../api/api'
+import { BallIndicator,BarIndicator,DotIndicator,MaterialIndicator, PacmanIndicator, PulseIndicator, SkypeIndicator, UIActivityIndicator, WaveIndicator  } from 'react-native-indicators';
+
 
 let pwdError=false
 
@@ -39,11 +41,14 @@ export default class Signup extends Component {
       'password' : new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
       'mobile'   : new RegExp(/^[6-9]\d{9}$/)
   }
+  @observable api = new Api()
+  @observable showToast : boolean = false
+  @observable toastMsg : String = ""
+  @observable waiting : boolean = false
 
   componentDidMount = async () => {
     try{
         const value = await AsyncStorage.getItem('loggedIn');
-        //alert(value)
         if (value != null) {
           (this as any).props.navigation.navigate('HomeScreen')        
         }
@@ -62,25 +67,38 @@ export default class Signup extends Component {
   }
 
   signInClicked = async () =>{
-    //this.validate()  
+    this.validate()  
     if(!this.nameError && !this.passwordError && !this.phoneError && !this.emailError){
-        try{
-            const payload = {'usernamae':this.email,'passsword':this.password,'firstName':this.name}
-            if(await this.myApi.userSignup(payload)){
-                (this as any).props.navigation.navigate('HomeScreen')
+        this.waiting = true
+        try {
+            let nameArray = this.name.split(' ')
+            let firstName = nameArray[0]
+            let lastName = this.name.substring(firstName.length)
+            const res =  await this.api.signUp(firstName,lastName,this.email,this.password,this.phone);
+            if (res && res.data) {
+                if(res.data===true){
+                    this.showToast = true;
+                    this.toastMsg = "Account created"
+                    setTimeout(() =>{
+                        this.showToast = false;
+                        (this as any).props.navigation.navigate('LoginScreen')
+                    }, 2500); 
+                }
+                else{
+                    this.showToast = true;
+                    this.toastMsg = "Account already exist"
+                    setTimeout(() =>{
+                        this.showToast = false;
+                    }, 2500); 
+                }
             }
-            else{
-                console.log('unable to create')
-            }
-            
-//            await AsyncStorage.setItem('loggedIn', 'Manas');
-        } 
-        catch (error) {
-            // Error saving data
+        }  catch (error) {
+              console.log(error);     
         }
-        // (this as any).props.navigation.navigate('HomeScreen')
+        finally{
+            this.waiting = false
+        }
     }
-
   }
 
   hideErrorMessages = () =>{
@@ -164,8 +182,10 @@ export default class Signup extends Component {
                     <Text style={styles.signinText}>Already have an account?</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.btnLogin} onPress={()=>this.signInClicked()}>
-                        <Text style={styles.btnText}>Create account</Text>
+                        {!this.waiting && <Text style={styles.btnText}>Create account</Text>}
+                        {this.waiting &&  <SkypeIndicator color='white' />}
                 </TouchableOpacity>
+                {this.showToast && <Toast message={this.toastMsg}/>}
             </View>
         </ImageBackground>
     );

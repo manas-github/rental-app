@@ -4,10 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import { BallIndicator,BarIndicator,DotIndicator,MaterialIndicator, PacmanIndicator, PulseIndicator, SkypeIndicator, UIActivityIndicator, WaveIndicator  } from 'react-native-indicators';
-import {DEVICE_DIMENSIONS} from './../constant'
+import {DEVICE_DIMENSIONS, Toast} from './../constant'
 import axios from 'axios';
 import {Api} from './../api/api'
-let pwdError=false
 
 interface props{
     navigation : any;
@@ -33,6 +32,9 @@ export default class Login extends Component {
       'password' : new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
     }
   @observable waiting = false
+  @observable showToast = false
+  @observable toastMsg = ""
+  @observable api = new Api()
   
 
   validate = () => {
@@ -43,37 +45,47 @@ export default class Login extends Component {
             this.emailError = true
         if(this.regex.password.test(this.password)){
             this.passwordError = false
-            pwdError = false
         }
         else{
             this.passwordError = true
-            pwdError = true
         }
 
   }
-   signInUser = async (email,password) =>{
-        const myApi = new Api()
-        //console.log(myApi.getUserToken()) 
-        const payload = { username : email, password : password }
-        const response = await myApi.userSignIn(payload)
-        //console.log(response)
-        if(await response){
-            (this as any).props.navigation.navigate('HomeScreen')
-        }
-        else{
-            console.log('unable to login')
-        }
-  
-  }
 
   
-  signInClicked = () =>{
-     this.signInUser(this.email,this.password);
+  signInClicked = async () =>{
+      console.log("here")
+    this.validate() 
+    if(!this.emailError && !this.passwordError){
+        this.waiting = true
 
-    // this.validate()  
-    // if(!this.passwordError && !this.emailError){
-    //     this.signInUser(this.email,this.password)
-    // }
+        try {
+            const res = await this.api.signIn(this.email,this.password);
+            if (res && res.data) {
+                if(res.data===true){
+                    (this as any).props.navigation.navigate('HomeScreen')
+                }
+                else{
+                    this.showToast = true;
+                    this.toastMsg = "Invalid credentials"
+                    setTimeout(() =>{
+                        this.showToast = false;
+                    }, 2500); 
+                }
+            }
+        }  catch (error) {
+            this.showToast = true;
+            this.toastMsg = "Unable to connect"
+            setTimeout(() =>{
+                this.showToast = false;
+            }, 2500); 
+              console.log(error);     
+        } finally {
+            this.waiting = false;
+        }
+
+    } 
+
 
   }
 
@@ -131,6 +143,7 @@ export default class Login extends Component {
                     {!this.waiting &&  <Text style={styles.btnText}>Login</Text>}
                     {this.waiting &&  <SkypeIndicator color='white' />}
                 </TouchableOpacity>
+                {this.showToast && <Toast message={this.toastMsg}/>}
             </View>
         </ImageBackground>
     );

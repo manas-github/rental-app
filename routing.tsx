@@ -24,7 +24,7 @@ const AppStackNavigator = createStackNavigator({
       //   }
       // },
       SplashScreen : {
-        screen : Home,
+        screen : Login,
         navigationOptions : {
           header : null
         }

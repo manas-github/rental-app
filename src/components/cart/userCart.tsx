@@ -48,10 +48,7 @@ export default class UserCart extends React.Component<any,any> {
         }  catch (error) {
               console.log(error);     
         }
-        // this.cartItems.id.splice(index, 1)
-        // this.cartItems.tenure.splice(index,1)
-        // this.cartItems.quantity.splice(index,1)
-        // this.productDetails.splice(index,1)
+ 
     }
 
     save = (productId,duration) => {
@@ -171,7 +168,7 @@ export default class UserCart extends React.Component<any,any> {
                     />
                 </View>
             )
-        if(this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length==0) 
+        if((this.cartLoaded && this.cart.id!=null && this.cart.user!=null) || this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length==0) 
             return (
                 <View style={styles.container}>
                     <Text>Your cart is empty</Text>

@@ -10,6 +10,25 @@ export class Api {
         return `${baseUrl}${endpoint}`
     }
 
+    signIn = async (email:String, password:String) =>{
+        let url = this.makeUrl("/login")
+        return axios.post(url,{
+            email : email,
+            password : password
+        })
+    }
+
+    signUp = async (firstName : String, lastName : String, email : String, password : String,mobile:String) => {
+        let url =this.makeUrl("/signup")
+        return axios.post(url,{
+            firstName : firstName,
+            lastName : lastName,
+            email : email,
+            password : password,
+            mobile : mobile
+        })
+    }
+
     getProductList = async (productType : String) => {
         let url = this.makeUrl("/product/"+(productType.toLowerCase()))
         return axios.get(url)
