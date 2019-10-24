@@ -3,15 +3,37 @@ import {AsyncStorage} from 'react-native';
 
 const baseUrl = "http://192.168.0.126:8184/api/v1";
 
+axios.interceptors.request.use( async function(config) {
+    let token = "";
+    try {
+        const value = await AsyncStorage.getItem('Token');
+        if (value !== null) {
+          // We have data!!
+          token = value
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+  
+    if ( token != null ) {
+      config.headers.Authorization = `Token ${token}`;
+    }
+  
+    return config;
+  }, function(err) {
+    return Promise.reject(err);
+});
+
 export class Api {
     constructor(){}
 
+    
     makeUrl = (endpoint : string) => {
         return `${baseUrl}${endpoint}`
     }
 
     signIn = async (email:String, password:String) =>{
-        let url = this.makeUrl("/login")
+        let url = this.makeUrl("/login").replace("/api/v1","");
         return axios.post(url,{
             email : email,
             password : password

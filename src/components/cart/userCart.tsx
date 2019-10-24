@@ -28,6 +28,7 @@ export default class UserCart extends React.Component<any,any> {
             const res = await this.api.getCart();
             if (res && res.data) {
                 this.cart = res.data
+                console.log(res)
                 this.cartLoaded = true
             }
         }  catch (error) {
@@ -168,7 +169,7 @@ export default class UserCart extends React.Component<any,any> {
                     />
                 </View>
             )
-        if((this.cartLoaded && this.cart.id!=null && this.cart.user!=null) || this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length==0) 
+        if((this.cartLoaded && this.cart.id!=null && this.cart.user!=null) && (this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length==0))
             return (
                 <View style={styles.container}>
                     <Text>Your cart is empty</Text>

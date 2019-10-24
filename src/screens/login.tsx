@@ -5,7 +5,7 @@ import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import { BallIndicator,BarIndicator,DotIndicator,MaterialIndicator, PacmanIndicator, PulseIndicator, SkypeIndicator, UIActivityIndicator, WaveIndicator  } from 'react-native-indicators';
 import {DEVICE_DIMENSIONS, Toast} from './../constant'
-import axios from 'axios';
+import {AsyncStorage} from 'react-native';
 import {Api} from './../api/api'
 
 interface props{
@@ -54,7 +54,6 @@ export default class Login extends Component {
 
   
   signInClicked = async () =>{
-      console.log("here")
     this.validate() 
     if(!this.emailError && !this.passwordError){
         this.waiting = true
@@ -62,20 +61,22 @@ export default class Login extends Component {
         try {
             const res = await this.api.signIn(this.email,this.password);
             if (res && res.data) {
-                if(res.data===true){
-                    (this as any).props.navigation.navigate('HomeScreen')
-                }
-                else{
-                    this.showToast = true;
-                    this.toastMsg = "Invalid credentials"
-                    setTimeout(() =>{
-                        this.showToast = false;
-                    }, 2500); 
+                console.log(res.data)
+                if(res.data){
+                    try {
+                        await AsyncStorage.setItem('Token',res.data);
+                        (this as any).props.navigation.navigate('HomeScreen')
+                      } catch (error) {
+                        this.showToast = true;
+                        this.toastMsg = "Security error. Contact team!!"
+                        setTimeout(() =>{
+                            this.showToast = false;
+                        }, 2500);                       }
                 }
             }
         }  catch (error) {
             this.showToast = true;
-            this.toastMsg = "Unable to connect"
+            this.toastMsg = "Invalid credentials"
             setTimeout(() =>{
                 this.showToast = false;
             }, 2500); 
