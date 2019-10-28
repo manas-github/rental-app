@@ -5,7 +5,7 @@ import { observer } from "mobx-react"
 import UserCart from './../components/cart/userCart'
 import SearchProducts from './../components/search/searchProduct'
 @observer
-export default class Cart extends React.Component {
+export default class Search extends React.Component {
 
   render() {
     return (

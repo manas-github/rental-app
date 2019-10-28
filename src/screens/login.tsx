@@ -7,6 +7,7 @@ import { BallIndicator,BarIndicator,DotIndicator,MaterialIndicator, PacmanIndica
 import {DEVICE_DIMENSIONS, Toast} from './../constant'
 import {AsyncStorage} from 'react-native';
 import {Api} from './../api/api'
+import { StackActions, NavigationActions } from 'react-navigation';
 
 interface props{
     navigation : any;
@@ -52,7 +53,19 @@ export default class Login extends Component {
 
   }
 
-  
+  resetStack = () => {
+    (this as any).props
+      .navigation
+      .dispatch(StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'HomeScreen',
+          }),
+        ],
+      }))
+   }
+
   signInClicked = async () =>{
     this.validate() 
     if(!this.emailError && !this.passwordError){
@@ -61,17 +74,19 @@ export default class Login extends Component {
         try {
             const res = await this.api.signIn(this.email,this.password);
             if (res && res.data) {
-                console.log(res.data)
                 if(res.data){
                     try {
                         await AsyncStorage.setItem('Token',res.data);
-                        (this as any).props.navigation.navigate('HomeScreen')
+                        await AsyncStorage.setItem('loggedIn','true')
+                        this.resetStack()
+                        //(this as any).props.navigation.navigate('HomeScreen')
                       } catch (error) {
                         this.showToast = true;
                         this.toastMsg = "Security error. Contact team!!"
                         setTimeout(() =>{
                             this.showToast = false;
-                        }, 2500);                       }
+                        }, 2500);                       
+                    }
                 }
             }
         }  catch (error) {
@@ -84,10 +99,7 @@ export default class Login extends Component {
         } finally {
             this.waiting = false;
         }
-
     } 
-
-
   }
 
   hideErrorMessages = () =>{
@@ -224,7 +236,8 @@ const styles = StyleSheet.create({
         width:220,
         right : 37,
         bottom : 36,
-        backgroundColor: 'rgba(52, 52, 52, 1)',        color:'white',
+        backgroundColor: 'rgba(52, 52, 52, 1)',        
+        color:'white',
         padding:4,
         borderTopColor:'red',
         borderTopWidth:1,

@@ -27,13 +27,21 @@ export default class UserCart extends React.Component<any,any> {
         try {
             const res = await this.api.getCart();
             if (res && res.data) {
-                this.cart = res.data
-                console.log(res)
+                this.cart = res.data;
                 this.cartLoaded = true
+                this.updatePrice();
             }
         }  catch (error) {
               console.log(error);     
         }
+    }
+
+    updatePrice = () => {
+        this.totalAmount=0;
+        this.cart.cartItem.forEach(item => {
+            this.totalAmount += item.product.price[item.duration]*item.quantity
+        });
+        this.totalAmount = 2*this.totalAmount;
     }
     
     deleteFromCart = async (productId,duration) => {
@@ -44,6 +52,7 @@ export default class UserCart extends React.Component<any,any> {
                     this.cart.cartItem = this.cart.cartItem.filter(function(item) {
                         return item.product.id!=productId || item.duration!=duration
                     })
+                    this.updatePrice();
                 }
             }
         }  catch (error) {
@@ -79,6 +88,7 @@ export default class UserCart extends React.Component<any,any> {
                                     item.quantity = quantity+1
                                 }
                             });
+                            this.updatePrice();
                         }
                     }
                 }  catch (error) {
@@ -96,6 +106,7 @@ export default class UserCart extends React.Component<any,any> {
                                 item.quantity = quantity-1
                             }
                         });
+                        this.updatePrice();
                     }
                 }
             }  catch (error) {

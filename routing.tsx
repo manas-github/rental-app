@@ -17,18 +17,19 @@ import OrderDetails from './src/screens/orderDetails'
 import ProductDetails from './src/components/productDetails/productDetails';
 
 const AppStackNavigator = createStackNavigator({
-      // WalkthroughScreen :{
-      //   screen : Walkthrough,
-      //   navigationOptions: {
-      //     header: null
-      //   }
-      // },
-      SplashScreen : {
-        screen : Login,
-        navigationOptions : {
-          header : null
+    SplashScreen : {
+      screen : Splash,
+      navigationOptions : {
+        header : null
+      }
+    },
+    WalkthroughScreen :{
+        screen : Walkthrough,
+        navigationOptions: {
+          header: null
         }
       },
+
       HomeScreen :{
         screen : Home,
         navigationOptions: {

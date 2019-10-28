@@ -4,6 +4,7 @@ import { observer } from "mobx-react"
 import { observable } from 'mobx';
 import {DEVICE_DIMENSIONS} from './../constant'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Api } from '../api/api';
 
 
 @observer
@@ -17,17 +18,31 @@ export default class Profile extends React.Component {
         return {
           title: 'PROFILE',
         };
-      };
-    @observable userDetails = {'name':'Manas','email':'abc@example.com','mobile':'8888888888'}
+    };
+    @observable userDetails = {'firstName':"manas",'lastName':"manas",'email':"manas",'mobile':"manas"}
     @observable editable = false;
-    @observable editedDetails = {'name':this.userDetails.name,'email':this.userDetails.email,'mobile':this.userDetails.mobile}
-    updateScreen = () =>{
+    @observable editedDetails = {'firstName':this.userDetails.firstName,'lastName':this.userDetails.lastName,'email':this.userDetails.email,'mobile':this.userDetails.mobile}
+    @observable api = new Api()
+
+    componentDidMount = () => {
+        const {params} = (this as any).props.navigation.state
+        this.userDetails = params
+        this.editedDetails = params
+    }
+
+   updateScreen = () =>{
         this.editable = true
     }
 
-    saveChanges = () => {
-        this.editable=false
-        alert('saved')
+    saveChanges = async () => {
+        try {
+            let res = await this.api.updateUserProfile(this.editedDetails.firstName,this.editedDetails.lastName,this.editedDetails.mobile)
+            if(res && res.data){
+                this.editable=false
+            }
+        } catch(error){
+            console.log(error)
+        }
     }
 
     render() {
@@ -44,19 +59,26 @@ export default class Profile extends React.Component {
                                         size={140}
                                     />
                                 </View>
-                                <Text style={styles.inputTitle}>Name</Text>
+                                <Text style={styles.inputTitle}>First Name</Text>
                                 <TextInput
                                     style={styles.input}
-                                    value={this.editedDetails.name}
+                                    value={this.editedDetails.firstName}
                                     editable={this.editable}
-                                    onChangeText = { (value) => this.editedDetails.name=value}
+                                    onChangeText = { (value) => this.editedDetails.firstName=value}
 
+                                />
+                                <Text style={styles.inputTitle}>Last Name</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    value={this.editedDetails.lastName}
+                                    editable={this.editable}
+                                    onChangeText = { (value) => this.editedDetails.lastName=value}
                                 />
                                 <Text style={styles.inputTitle}>Email id</Text>
                                 <TextInput
                                     style={styles.input}
                                     value={this.editedDetails.email}
-                                    editable={this.editable}
+                                    editable={false}
                                     onChangeText = { (value) => this.editedDetails.email=value}
 
                                 />

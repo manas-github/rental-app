@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text,Dimensions } from 'react-native';
+import { StyleSheet, View, Text,Dimensions,AsyncStorage } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Home from './home'
 import Signup from './signup'
@@ -11,10 +11,20 @@ export default class Walkthrough extends React.Component {
       showRealApp: false,
     };
   }
-  _onDone = () => {
+  _onDone = async () => {
+    try{
+    await AsyncStorage.setItem('openedFirstTime','true');
+    } catch (error){
+
+    }
     (this as any).setState({ showRealApp: true });
   };
-  _onSkip = () => {
+  _onSkip = async () => {
+    try{
+      await AsyncStorage.setItem('openedFirstTime','true');
+      } catch (error){
+  
+      }
     (this as any).setState({ showRealApp: true });
   };
   render() {

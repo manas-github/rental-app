@@ -52,7 +52,6 @@ export default class ProductDetails extends React.Component<props,any> {
     try{
       const res = await this.api.addProductToCart(this.productId,this.tenureSelected)
       if(res && res.data) {
-        console.log(res.data)
       }
     } catch(error){
       console.log(error)

@@ -2,6 +2,7 @@ import axios from "axios";
 import {AsyncStorage} from 'react-native';
 
 const baseUrl = "http://192.168.0.126:8184/api/v1";
+//const baseUrl = "http://192.168.43.206/api/v1";
 
 axios.interceptors.request.use( async function(config) {
     let token = "";
@@ -60,11 +61,16 @@ export class Api {
         let url = this.makeUrl('/product/'+productId)
         return axios.get(url)
     }
+
+    getProductBySearch = async (searchKey) => {
+        let url = this.makeUrl("/product/search/"+searchKey)
+        console.log(url)
+        return axios.get(url)
+    }
+
     getCartItemCount = async() => {
         let url = this.makeUrl("/cart/getCartItemCount")
-        return axios.post(url, {
-            email : "manas.rishav@gmail.com"
-          });
+        return axios.post(url);
        
     }
 
@@ -72,7 +78,6 @@ export class Api {
         let url = this.makeUrl("/cart/addProduct")
         return axios.patch(url,{
                 "duration": duration,
-                "email": "manas.rishav@gmail.com",
                 "productId": productId
               
         })
@@ -81,7 +86,6 @@ export class Api {
     increaseCartItemQuantity = async(productId,duration) => {
         let url = this.makeUrl("/cart/increaseQuantity")
         return axios.patch(url,{
-            email : "manas.rishav@gmail.com",
             duration : duration,
             productId : productId
         })
@@ -90,7 +94,6 @@ export class Api {
     decreaseCartItemQuantity = async(productId,duration) => {
         let url = this.makeUrl("/cart/decreaseQuantity")
         return axios.patch(url,{
-            email : "manas.rishav@gmail.com",
             duration : duration,
             productId : productId
         })
@@ -99,7 +102,6 @@ export class Api {
     removeCartItem = async (productId, duration) => {
         let url = this.makeUrl('/cart/removeProduct')
         return axios.patch(url,{
-            email : "manas.rishav@gmail.com",
             duration : duration,
             productId : productId
         })
@@ -107,9 +109,7 @@ export class Api {
 
     getCart = async() => {
         let url = this.makeUrl("/cart")
-        return axios.post( url,{
-            email : "manas.rishav@gmail.com"
-        });
+        return axios.post(url);
     }
     getUserToken =async () => {
         let userToken = ''
@@ -117,7 +117,6 @@ export class Api {
             const value = await AsyncStorage.getItem('userToken');
             if (value !== null) {
                 userToken = value
-                console.log(value);
                 return value;
             }
         }catch (error){
@@ -137,67 +136,28 @@ export class Api {
 
     }
 
-    removeFromAsyncStorage = async () => {
+    removeFromAsyncStorage = async (key) => {
         try{
-            await AsyncStorage.removeItem('userToken')
+            await AsyncStorage.removeItem(key)
         }catch(error){
             console.log(error)
         }
     }
-
-    userSignIn = async (payload: any) => {
-        let result = false
-        const url = this.makeUrl("/auth/login/")
-        await axios
-        .post(url, payload)
-        .then(response => {
-            const { token, user } = response.data;
-            axios.defaults.headers.common.Authorization = `Token ${token}`;
-            this.saveToAsyncStorage('userToken',token)
-            result = true
-        })
-        .catch(error => {
-            console.log("Error : "+error)
-            result = false
-        });   
-        return result    
-    }
     
-
-    userLogout = async () => {
-        const url = this.makeUrl("/auth/logout/")
-        axios.defaults.headers.common.Authorization = `Token ${await this.getUserToken()}`;
-
-        axios
-        .get(url)
-        .then(response => {
-            this.removeFromAsyncStorage()
-            axios.defaults.headers.common.Authorization = null
-            return true
-        })
-        .catch(error =>  {
-            console.log(error)
-            return false
-        });
+    getUser = async() => {
+        let url = this.makeUrl("/user")
+        return axios.post( url);
     }
 
-    userSignup = async (payload:any) => {
-        let result = false;
-        const url = this.makeUrl("/auth/register/")
-        axios
-        .post(url, payload)
-        .then(response => {
-        const { token, user } = response.data;
-        axios.defaults.headers.common.Authorization = `Token ${token}`;
-        this.saveToAsyncStorage('userToken',token)
-        result = true
+    updateUserProfile = async(firstName,lastName,mobile) => {
+        let url = this.makeUrl("/user/update")
+        console.log(url)
+        return axios.post(url,{
+            firstName : firstName,
+            lastName : lastName,
+            mobile : mobile
         })
-        .catch(error => {
-            console.log(error) 
-            result = false
-        });
-        return result
-    } 
+    }
 }
    
 

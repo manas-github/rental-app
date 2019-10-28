@@ -39,7 +39,17 @@ export default class Listing extends React.Component<props,any> {
             }
         }
         else{
-
+            try {
+                let searchKey = (this as any).props.navigation.getParam('searchKey');
+                const res = await this.api.getProductBySearch(searchKey);
+                if (res && res.data) {
+                    this.data = res.data;
+                    this.isLoaded = true
+                }
+            }  catch (error) {
+                  console.log(error);     
+            }
+            
         }
 
 

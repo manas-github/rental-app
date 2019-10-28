@@ -13,53 +13,71 @@ import Topbar from "../components/home/topbar"
 import Icon from 'react-native-vector-icons/Ionicons';
 import Trending from '../components/home/trending';
 import {Api} from './../api/api'
+import { StackActions, NavigationActions } from 'react-navigation';
 
 @observer
 class Home extends React.Component {
   @observable modalVisible = false
   @observable status = ''
-  @observable userLoggedIn = false;
-  @observable myApi = new Api()
-  @observable userDetails ={"name":"","email":""}
+  @observable userLoggedIn = true;
+  @observable api = new Api()
+  @observable userDetails :any ={}
+  
   componentWillMount = async() => {
-    
+
+
 
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-
     NetInfo.isConnected.fetch().done(
       (isConnected) => { 
         this.status = isConnected
       }
     );
   }
+      // at some point in your code
+      resetStack = (screen) => {
+        (this as any).props
+          .navigation
+          .dispatch(StackActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: screen,
+              }),
+            ],
+          }))
+       }
 
   componentDidMount = async() =>{
-    try {
-      const value = await AsyncStorage.getItem('loggedIn');
-      if (value !== null) {
-        this.userLoggedIn = true;
-        const fetchuserAPI = 'https://manasvoo.free.beeceptor.com/getuser'
-        const response = await fetch(fetchuserAPI);
-        this.userDetails = await response.json()
+      try {
+          const res = await this.api.getUser();
+          if (res && res.data) {
+             this.userDetails = res.data
+          }
+      }  catch (error) {
+          console.log(this.status)
+            if(this.status){
+              console.log("Internet Connection error")
+            }
+            else{
+              this.api.removeFromAsyncStorage('Token')
+              this.api.saveToAsyncStorage('loggedIn','false');
+              (this as any).props.navigation.navigate('LoginScreen')
+            }
+            console.log(error);     
       }
-    } catch (error) {
-      // Error retrieving data
-    }
   }
   openModal = () =>{
     this.modalVisible = true;
   }
 
-  logout = () => {
+  logout = async () => {
+    await AsyncStorage.setItem('Token','invalid')
+    await this.api.removeFromAsyncStorage('Token')
+    await AsyncStorage.setItem('loggedIn','false');
     this.closeModal();
-    if(this.myApi.userLogout()){
-      (this as any).props.navigation.navigate('LoginScreen')
-    }
-    else{
-      console.log('unable to logout')
-    }
-
-
+    this.resetStack('LoginScreen')
+    //(this as any).props.navigation.navigate('LoginScreen')
   }
 
   closeModal = () =>{
@@ -119,7 +137,7 @@ class Home extends React.Component {
                 />
                 <TouchableOpacity>
                   {!this.userLoggedIn && <TouchableOpacity onPress={() =>{this.closeModal(); (this as any).props.navigation.navigate('LoginScreen')}}><Text>Login</Text></TouchableOpacity>}
-                  {this.userLoggedIn && <TouchableOpacity onPress={() =>{this.closeModal(); (this as any).props.navigation.navigate('ProfileScreen')}}><Text>{this.userDetails.name}</Text></TouchableOpacity>}
+                  {this.userLoggedIn && <TouchableOpacity onPress={() =>{this.closeModal(); (this as any).props.navigation.navigate('ProfileScreen', this.userDetails)}}><Text>{this.userDetails.firstName}</Text></TouchableOpacity>}
                 </TouchableOpacity>
               </View>
               

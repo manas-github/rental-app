@@ -1,34 +1,57 @@
 import React from 'react';
 import { Image, Text, View,AsyncStorage } from 'react-native';
-import { Asset, AppLoading, SplashScreen } from 'expo';
 import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import {DEVICE_DIMENSIONS} from './../constant'
+import { StackActions, NavigationActions } from 'react-navigation';
 
 @observer
 export default class Splash extends React.Component {
   @observable userLoaded : any = false;
+  @observable openedFirstTime : any;
+  @observable loggedIn : any;
   
   componentDidMount = async() =>{
-    try{
-    const value = await AsyncStorage.getItem('loggedIn');
-      
-    setTimeout(() => {
-        if(value!==null){
-            (this as any).props.navigation.navigate('HomeScreen')
-        }
-        else
-        (this as any).props.navigation.navigate('LoginScreen')
-
-    }, 3000);
-      
+    try {
+      this.openedFirstTime = await AsyncStorage.getItem('openedFirstTime');
+      this.loggedIn = await AsyncStorage.getItem('loggedIn');
+      setTimeout(() => {
+        this.navigateNow()
+      }, 3000);      
     } catch (error) {
       // Error retrieving data
+      console.log(error)
     }
   }
-  navigateNow = () => {
 
+  resetStack = (screen) => {
+    (this as any).props
+      .navigation
+      .dispatch(StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: screen,
+          }),
+        ],
+      }))
   }
+
+  navigateNow = () => {
+    let screen ="";
+    console.log(this.loggedIn+"logggedin")
+    if(this.openedFirstTime==null){
+      screen = 'WalkthroughScreen'
+    } 
+    else if(this.loggedIn!=null && this.loggedIn =='true'){
+        screen = 'HomeScreen'
+    }
+    else {
+      screen = 'LoginScreen'
+    }
+    this.resetStack(screen);
+  }
+
   render() {
     if (!this.userLoaded) {
       return (
@@ -38,13 +61,10 @@ export default class Splash extends React.Component {
         />
       );
     }
-   else{
+    else{
        return(
            <Text>hello</Text>
        )
-   }
-     
+    }  
   }
-
-
 }
