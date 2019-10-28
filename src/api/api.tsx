@@ -158,6 +158,21 @@ export class Api {
             mobile : mobile
         })
     }
+
+    getSearchHistory = async () => {
+        let url = this.makeUrl('/productSearchHistory');
+        return axios.get(url);
+    }
+
+    deleteFromSearchHistory = async (searchKey) => {
+        let url = this.makeUrl('/productSearchHistory/remove')
+        return axios.post(url,searchKey)
+    }
+
+    getProductTitleBySearch = async (searchKey) =>{
+        let url = this.makeUrl('/product/keyPressSearch/'+searchKey)
+        return axios.get(url)
+    }
 }
    
 

@@ -4,6 +4,7 @@ import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import Icon from 'react-native-vector-icons/Ionicons';
 import {DEVICE_DIMENSIONS} from './../../constant'
+import { Api } from '../../api/api';
 
 
 interface props{
@@ -13,30 +14,50 @@ interface props{
 @observer
 export default class SearchProducts extends React.Component<props,any> {
   navigation: any;
-    constructor(props :any){
+  constructor(props :any){
         super(props);
         this.navigation = (this as any).props.navigation;
-    }
-
+  }
+  @observable loaded = false;
   @observable searchKey = ''
-  @observable searchItems ={id:['1','2','3']}
-  @observable historyKeywords = ['Search1','search2','search3 barak','search4']
-  @observable title=['title','fdgfasdfs','fdgjujukyu','qwert','yuiop','ertyui']
+  @observable historyKeywords : any = []
+  @observable title:any=[]
   @observable titleMatched=['']
   @observable historyMatched=['']
   @observable noMatch =['']
+  @observable api = new Api()
 
-  componentDidMount = () => {
-    this.historyKeywords.forEach(val => {
-      this.historyMatched.push(val)
-    })
-    this.historyMatched.shift()
-    this.titleMatched=[]
-    this.noMatch=[]
+  componentDidMount = async () => {
+    try{
+      let res = await  this.api.getSearchHistory();
+      if(res && res.data){
+        res.data.forEach((data) => {
+          this.historyKeywords.push(data.searchKey)
+        })
+        this.historyKeywords.forEach(val => {
+          this.historyMatched.push(val)
+        })
+        this.historyMatched.shift()
+        this.titleMatched=[]
+        this.noMatch=[]
+        this.loaded = true
+      }
+    } catch(error){
+      console.log(error)
+    }
+ 
   }
 
-  updateSearchKey = (value) => {
+  updateSearchKey = async (value) => {
     this.searchKey=value
+    try{
+      let res = await  this.api.getProductTitleBySearch(value);
+      if(res && res.data){
+          this.title = res.data
+      }
+    } catch(error){
+      console.log(error)
+    }    
     this.search(value)
   }
 
@@ -65,8 +86,14 @@ export default class SearchProducts extends React.Component<props,any> {
     this.titleMatched.shift()
 }
 
-  remove = (index) => {
+  remove = async(index) => {
+    let searchKey = this.historyMatched[index]
     this.historyMatched.splice(index,1)
+    try{
+     let res = await this.api.deleteFromSearchHistory(searchKey);
+    }catch (error){
+
+    }
   }
 
   searchProducts = (val) =>{
@@ -142,8 +169,8 @@ export default class SearchProducts extends React.Component<props,any> {
             />  
           </View>
         </View>   
-        {this.historyMatched.map((val,index)=>this.renderItems(val,index,'history'))}
-        {this.titleMatched.map((val,index)=>this.renderItems(val,index,'title'))}
+        {this.loaded && this.historyMatched.map((val,index)=>this.renderItems(val,index,'history'))}
+        {this.loaded && this.titleMatched.map((val,index)=>this.renderItems(val,index,'title'))}
         {this.noMatch.map((val,index)=>this.renderItems(val,index,'title'))}
       </View>    
     );
