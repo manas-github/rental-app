@@ -5,6 +5,7 @@ import { observer } from "mobx-react"
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Api } from '../../api/api';
 import { apisAreAvailable } from 'expo';
+
 interface props{
     navigation : any;
 }
@@ -16,35 +17,13 @@ export default class CartIcon extends React.Component<props,any> {
       super(props);
       this.navigation = (this as any).props.navigation;
     }
+    @observable cartCount = (this as any).props.cartCount;
 
-    @observable cartTotal = -1
-
-    componentDidMount = async() =>{
-        let api = new Api();
-        try {
-            const res = await api.getCartItemCount();
-            console.log(res)
-            if (res && res.data) {
-                this.cartTotal = res.data
-            }
-          } catch (error) {
-              this.cartTotal=-1;
-          }
-        };
-
-    
-    updateCart = async() =>{
-        try {
-
-           
-          
-        } catch (error) {
-          // Error retrieving data
-          console.log("unable to fetch cart total data")
-      
+    componentDidUpdate(prevProps) {
+        if(prevProps.value !== (this as any).props.cartCount) {
+                this.cartCount = (this as any).props.cartCount
         }
     }
-
   render() {
     return (
         <View style={styles.container}>
@@ -54,7 +33,7 @@ export default class CartIcon extends React.Component<props,any> {
                     size={40}
                     color='grey'
                 />
-                {this.cartTotal>=0 && <View style={styles.cartNumber}><Text style={styles.cartTotalText}>{this.cartTotal}</Text></View>}
+                {this.cartCount>0 && <View style={styles.cartNumber}><Text style={styles.cartTotalText}>{this.cartCount}</Text></View>}
             </TouchableOpacity> 
         </View>  
     );

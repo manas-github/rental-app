@@ -4,6 +4,7 @@ import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import Icon from 'react-native-vector-icons/Ionicons';
 import CartIcon from './cartIcon'
+import { Api } from '../../api/api';
 interface props{
     navigation : any;
 }
@@ -15,6 +16,23 @@ class Topbar extends React.Component<any, any> {
       super(props);
       this.navigation = (this as any).props.navigation;
     }
+
+    @observable cartCount = 0;
+
+    componentDidMount = async () =>{
+      let api = new Api()
+      try {
+        const res = await api.getCartItemCount();
+        console.log(res)
+        if (res && res.data) {
+            this.cartCount = res.data
+            console.log(this.cartCount)
+        }
+      } catch (error) {
+          this.cartCount=-1;
+      }
+    }
+    
 
     navigateToCart = () => {
         (this as any).props.navigation.navigate('CartScreen');
@@ -52,7 +70,7 @@ class Topbar extends React.Component<any, any> {
         {/* <TouchableOpacity onPress={ () => this.navigateToCart()}>
             
         </TouchableOpacity> */}
-            <CartIcon navigation={(this as any).props.navigation}/>
+            <CartIcon cartCount={this.cartCount} navigation={(this as any).props.navigation}/>
         </View>
       </View>
     );

@@ -1,8 +1,9 @@
 import axios from "axios";
 import {AsyncStorage} from 'react-native';
 
-const baseUrl = "http://192.168.0.126:8184/api/v1";
+//const baseUrl = "http://192.168.0.127:8184/api/v1";
 //const baseUrl = "http://192.168.43.206/api/v1";
+const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
 
 axios.interceptors.request.use( async function(config) {
     let token = "";
@@ -42,7 +43,7 @@ export class Api {
     }
 
     signUp = async (firstName : String, lastName : String, email : String, password : String,mobile:String) => {
-        let url =this.makeUrl("/signup")
+        let url =this.makeUrl("/signup").replace("/api/v1","");
         return axios.post(url,{
             firstName : firstName,
             lastName : lastName,
@@ -73,7 +74,10 @@ export class Api {
         return axios.post(url);
        
     }
-
+    getTrendingProducts = async (count) =>{
+        let url = this.makeUrl("/trendingProduct/"+count)
+        return axios.get(url)
+    }
     addProductToCart = async (productId,duration) => {
         let url = this.makeUrl("/cart/addProduct")
         return axios.patch(url,{

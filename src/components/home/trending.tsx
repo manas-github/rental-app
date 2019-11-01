@@ -4,17 +4,30 @@ import {observable} from 'mobx'
 import { observer } from "mobx-react"
 import {DEVICE_DIMENSIONS} from './../../constant'
 import { MaterialIndicator } from 'react-native-indicators';
+import { Api } from '../../api/api';
 
 @observer
 export default class Trending extends React.Component<any, any> {
 
-    @observable data = {"furniture" : [],"appliance":[],"package":[]}
+    @observable data = []
     @observable isLoaded = false;
+    @observable api = new Api()
+
     componentDidMount = async () => {
-        const productListApi = 'https://api.myjson.com/bins/pbn12'
-        const response = await fetch(productListApi);
-        this.data = await response.json()
-        this.isLoaded = true
+        // const productListApi = 'https://api.myjson.com/bins/pbn12'
+        // const response = await fetch(productListApi);
+        // this.data = await response.json()
+        // this.isLoaded = true
+        try {
+            const res = await this.api.getTrendingProducts(2);
+            if (res && res.data) {
+                console.log(res)
+                this.data = res.data; 
+                this.isLoaded = true 
+            }
+        }  catch (error) {
+              console.log(error);     
+        } 
     }
 
     navigateToProductDetailScreen = (id) =>{
@@ -28,7 +41,7 @@ export default class Trending extends React.Component<any, any> {
                     onPress={ () => this.navigateToProductDetailScreen(item.id)}
                 >
                     <Image 
-                        source={{uri : item.url}} 
+                        source={{uri : item.imageUrl}} 
                         style={{  height: 260,width:DEVICE_DIMENSIONS.width*0.6,borderRadius:0}}
                     />
                     <View style={styles.titleAndPrice}>
@@ -36,7 +49,7 @@ export default class Trending extends React.Component<any, any> {
                             {item.title.toUpperCase()}
                         </Text>
                         <Text style={styles.price}>
-                            Starting from &#8377;{item.price[0]}
+                            Starting from &#8377;{item.price[3]}
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -54,7 +67,7 @@ export default class Trending extends React.Component<any, any> {
                                 showsHorizontalScrollIndicator={false}
                             >
                                 <View style={styles.trendingContainer}>
-                                    {this.data.appliance.map((val,index)=>this.renderItems(val,index))}                     
+                                    {this.data.map((val,index)=>this.renderItems(val,index))}                     
                                 </View>
                             </ScrollView> 
                             :

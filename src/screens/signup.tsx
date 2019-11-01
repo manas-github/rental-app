@@ -49,9 +49,9 @@ export default class Signup extends Component {
   componentDidMount = async () => {
     try{
         const value = await AsyncStorage.getItem('loggedIn');
-        if (value != null) {
-          (this as any).props.navigation.navigate('HomeScreen')        
-        }
+        // if (value != null) {
+        //   (this as any).props.navigation.navigate('HomeScreen')        
+        // }
       }
       catch (error) {
         // Error retrieving data

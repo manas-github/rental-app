@@ -62,7 +62,7 @@ export default class Listing extends React.Component<props,any> {
         <TouchableOpacity key={item.key} style={styles.grid} onPress={ () => this.navigateToProductDetailScreen(item.id)}>
             <Image source={{uri : item.imageUrl}} style={{  height: 158,borderRadius:0}}/>
             <View style={styles.titleAndPrice}>
-                <Text style={styles.title}>{item.title.toUpperCase()}</Text>
+                <Text style={styles.title}>{item.title.toUpperCase().substring(0,22)}</Text>
                 <Text style={styles.price}>Starting from &#8377;{item.price[3]}</Text>
             </View>
             {/* <Text style={styles.description}>{item.description}</Text> */}

@@ -32,7 +32,7 @@ export default class ProductDetails extends React.Component<props,any> {
   @observable api = new Api()
   @observable product : any= {}
   @observable isLoaded : boolean = false
-
+  @observable imageList : []
 
 
   componentDidMount = async() => {
@@ -52,6 +52,13 @@ export default class ProductDetails extends React.Component<props,any> {
     try{
       const res = await this.api.addProductToCart(this.productId,this.tenureSelected)
       if(res && res.data) {
+        const cartCount = res.data;
+        console.log(cartCount);
+        (this as any).props.navigation.setParams({cartCount});
+        this.showToast = true
+        setTimeout(() =>{
+          this.showToast = false;
+      }, 2500);  
       }
     } catch(error){
       console.log(error)
@@ -100,7 +107,7 @@ export default class ProductDetails extends React.Component<props,any> {
         <View style={{flex:1,opacity:this.modalVisible?0.1:1.0}}>
         <ScrollView>
             <View style={styles.imageSliderContainer}>
-              <ProductImageSlider/>
+              <ProductImageSlider images ={this.imageList}/>
             </View>
 
             <Text style={styles.title}>{this.product.title.toUpperCase()}</Text>
