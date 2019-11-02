@@ -4,11 +4,11 @@ import AppContainer from './routing'
 
 @observer
 export default class App extends React.Component {
-  render() {
-    return (
-      <AppContainer/>
-    );
-  }
+    render() {
+        return (
+            <AppContainer />
+        );
+    }
 }
 
 

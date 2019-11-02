@@ -1,26 +1,29 @@
 {
     "extends": [],
     "rules": {
-      "object-literal-sort-keys": false,
-      "no-empty": false,
-      "ordered-imports": false,
-      "member-access": false,
-      "interface-name": [true, "never-prefix"],
-      "no-console": false,
-      "no-shadowed-variable": false,
-      "no-empty-interface": false,
-      "no-debugger": false,
-      "jsx-no-lambda": false,
-      "prefer-const": false,
-      "no-string-literal": false,
-      "object-literal-shorthand": false,
-      "prefer-for-of": false,
-      "jsx-boolean-value": false
+        "object-literal-sort-keys": false,
+        "no-empty": false,
+        "ordered-imports": false,
+        "member-access": false,
+        "interface-name": [
+            true,
+            "never-prefix"
+        ],
+        "no-console": false,
+        "no-shadowed-variable": false,
+        "no-empty-interface": false,
+        "no-debugger": false,
+        "jsx-no-lambda": false,
+        "prefer-const": false,
+        "no-string-literal": false,
+        "object-literal-shorthand": false,
+        "prefer-for-of": false,
+        "jsx-boolean-value": false
     },
     "linterOptions": {
-      "exclude": [
-        "config/**/*.js",
-        "node_modules/**/*.ts"
-      ]
+        "exclude": [
+            "config/**/*.js",
+            "node_modules/**/*.ts"
+        ]
     }
-  }
+}

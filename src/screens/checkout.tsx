@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet,TextInput, View,ScrollView,Linking,SafeAreaView,Platform,Text,TouchableOpacity} from 'react-native';
+import { StyleSheet,TextInput, View,ScrollView,Linking,SafeAreaView,Platform,Text} from 'react-native';
 import { observer } from "mobx-react"
-import { observable } from 'mobx';
 import CartFooter from './../components/cart/footer'
 import {DEVICE_DIMENSIONS} from './../constant'
-
 
 @observer
 export default class Checkout extends React.Component {
@@ -74,7 +72,5 @@ const styles = StyleSheet.create({
         padding:8,
         color : '#B2ABAB',
         marginTop:8
-    }
-
-    
+    } 
 });

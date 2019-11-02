@@ -1,4 +1,4 @@
-import {createStackNavigator,createAppContainer} from 'react-navigation'
+import { createStackNavigator, createAppContainer } from 'react-navigation'
 import Home from "./src/screens/home"
 import Cart from './src/screens/cart'
 import ProductList from './src/screens/productList'
@@ -17,72 +17,72 @@ import OrderDetails from './src/screens/orderDetails'
 import ProductDetails from './src/components/productDetails/productDetails';
 
 const AppStackNavigator = createStackNavigator({
-    SplashScreen : {
-      screen : Splash,
-      navigationOptions : {
-        header : null
-      }
+    SplashScreen: {
+        screen: Splash,
+        navigationOptions: {
+            header: null
+        }
     },
-    WalkthroughScreen :{
-        screen : Walkthrough,
+    WalkthroughScreen: {
+        screen: Walkthrough,
         navigationOptions: {
-          header: null
+            header: null
         }
-      },
+    },
 
-      HomeScreen :{
-        screen : Home,
+    HomeScreen: {
+        screen: Home,
         navigationOptions: {
-          header: null
+            header: null
         }
-      },
-      ProfileScreen : {
-        screen : Profile
-      },
-      ProductListScreen : {
-        screen : ProductList
-      },
-      CartScreen : {
-        screen : Cart,
+    },
+    ProfileScreen: {
+        screen: Profile
+    },
+    ProductListScreen: {
+        screen: ProductList
+    },
+    CartScreen: {
+        screen: Cart,
 
-      },
-      SearchScreen : {
-        screen : Search,
+    },
+    SearchScreen: {
+        screen: Search,
         navigationOptions: {
-          header: null
+            header: null
         }
-      },
-      ProductDetailsScreen : {
-        screen : Product
-      },
-      SignupScreen : {
-        screen : Signup,
-        navigationOptions : {
-          header  : null
+    },
+    ProductDetailsScreen: {
+        screen: Product
+    },
+    SignupScreen: {
+        screen: Signup,
+        navigationOptions: {
+            header: null
         }
-      },
-      LoginScreen : {
-        screen : Login,
-        navigationOptions : {
-          header  : null
+    },
+    LoginScreen: {
+        screen: Login,
+        navigationOptions: {
+            header: null
         }
-      },
-      ContactScreen : {
-        screen : Contact
-      },
-      SubscriptionsScreen : {
-        screen : Subscriptions
-      },
-      PolicyScreen : {
-        screen : Policy
-      },
-      CheckoutScreen : {
-        screen : Checkout
-      },
-      OrderDetailsScreen : {
-        screen : OrderDetails
-      }
-    })  
+    },
+    ContactScreen: {
+        screen: Contact
+    },
+    SubscriptionsScreen: {
+        screen: Subscriptions
+    },
+    PolicyScreen: {
+        screen: Policy
+    },
+    CheckoutScreen: {
+        screen: Checkout
+    },
+    OrderDetailsScreen: {
+        screen: OrderDetails
+    }
+})
 
 const AppContainer = createAppContainer(AppStackNavigator);
 
