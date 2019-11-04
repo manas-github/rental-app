@@ -74,3 +74,9 @@ To get started with this project you will need :
   
   
   :heavy_exclamation_mark: ```The backend service of this app is hosted on heroku free tier service. So, it may take few seconds to respond. If the API calls doesn't respond within 60 seconds, please follow the instruction ```[here](https://github.com/manas-github/rental-serverapp-springboot "Rental Application Backend")``` to start the backend service locally and change the base url in /src/api/api.tsx with the local url.  ```
+  
+  
+  # License
+  This project is licensed under the MIT License - see the [LICENSE](https://github.com/manas-github/rental-app/blob/master/LICENSE) file for details
+
+
