@@ -40,7 +40,7 @@ export default class Trending extends React.Component<any, any> {
                 />
                 <View style={styles.titleAndPrice}>
                     <Text style={styles.title}>
-                        {item.title.toUpperCase()}
+                        {item.title.toUpperCase().substring(0,15)}
                     </Text>
                     <Text style={styles.price}>
                         Starting from &#8377;{item.price[3]}

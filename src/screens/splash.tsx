@@ -17,7 +17,7 @@ export default class Splash extends React.Component {
             this.loggedIn = await AsyncStorage.getItem('loggedIn');
             setTimeout(() => {
                 this.navigateNow()
-            }, 3000);
+            }, 2200);
         } catch (error) {
         }
     }
