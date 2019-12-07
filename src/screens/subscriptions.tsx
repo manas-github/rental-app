@@ -4,36 +4,54 @@ import { observable } from 'mobx'
 import { observer } from "mobx-react"
 import { DEVICE_DIMENSIONS } from './../constant'
 import { MaterialIndicator } from 'react-native-indicators';
+import { Api } from '../api/api';
 
 
 @observer
 export default class Subscriptions extends React.Component<any, any> {
 
+    @observable api = new Api()
+    @observable orders = []
     @observable isLoaded = false;
-    @observable subscribedItems = [1, 4, 5, 6];
+
     componentDidMount = async () => {
-        this.isLoaded = true
+        try {
+            const res = await this.api.getAllOrders();
+            if (res && res.data) {
+                this.isLoaded = true
+                this.orders = res.data
+            } 
+        } catch (error) {
+
+        }
     }
 
-
-    renderItems = (item, index) => {
+    renderOrder = (order,index) => {
+        return (
+            <View key={index}>
+                {order.orderItems.map((val, index) => this.renderItems(val, index,order))}
+            </View>
+        )
+    }
+    renderItems = (orderItem, index, order) => {
         return (
             <View key={index} style={styles.itemContainer}>
-                <TouchableOpacity onPress={() => { (this as any).props.navigation.navigate('OrderDetailsScreen') }}>
+                <TouchableOpacity onPress={() => { (this as any).props.navigation.navigate('OrderDetailsScreen',{'order':order,'orderItemId':orderItem.id})}}>
                     <View style={styles.innerContainer}>
                         <View style={styles.leftView}>
                             <View style={styles.title}>
-                                <Text>Whirlpool 1.5 Ton 5 Star Split Intertor Ac white</Text>
+                                <Text>{orderItem.product.title}</Text>
+                                <Text>Duration : {orderItem.duration} months   |  Qty : {orderItem.quantity}</Text>
                             </View>
                             <View style={styles.deliveryStatus}>
                                 <View style={styles.circle} />
-                                <Text>Delivery expected on 12.12.12</Text>
+                                <Text>Delivery expected on x.y.z</Text>
                             </View>
                         </View>
                         <View style={styles.rightView}>
                             <Image
                                 style={{ height: 60 }}
-                                source={{ uri: 'https://assets.furlenco.com/image/upload/dpr_1.0,f_auto,q_auto/v1/furlenco-images-2/hulk/home/img-rent-relv-1-v1.png' }}
+                                source={{ uri: orderItem.product.imageUrl}}
                             />
                         </View>
                     </View>
@@ -43,15 +61,15 @@ export default class Subscriptions extends React.Component<any, any> {
     }
 
     render() {
-        if (this.isLoaded && this.subscribedItems.length > 0)
+        if (this.isLoaded && this.orders.length > 0)
             return (
                 <ScrollView>
                     <View style={styles.container}>
-                        {this.subscribedItems.map((val, index) => this.renderItems(val, index))}
+                        {this.orders.map((val, index) => this.renderOrder(val, index))}
                     </View>
                 </ScrollView>
             );
-        else if (this.isLoaded && this.subscribedItems.length == 0)
+        else if (this.isLoaded && this.orders.length == 0)
             return (
                 <View style={styles.container}>
                     <Image

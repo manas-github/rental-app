@@ -26,12 +26,12 @@ export default class Footer extends React.Component<props, any> {
                     </View>
                     {(this as any).props.screen === 'cart' ?
                         <View style={{ flex: 1, backgroundColor: 'white', borderLeftColor: '#E8E8E8', borderLeftWidth: 2 }}>
-                            <TouchableOpacity onPress={() => (this as any).props.navigation.navigate('CheckoutScreen')}>
+                            <TouchableOpacity onPress={() => (this as any).props.navigation.navigate('CheckoutScreen',{'totalAmount':(this as any).props.amount})}>
                                 <Text style={{ margin: 5, marginLeft: 10, height: 40, fontSize: 18, paddingTop: 6, backgroundColor: 'orange', textAlign: 'center' }}>CONTINUE</Text>
                             </TouchableOpacity>
                         </View> :
                         <View style={{ flex: 1, backgroundColor: 'white', borderLeftColor: '#E8E8E8', borderLeftWidth: 2 }}>
-                            <TouchableOpacity onPress={() => (this as any).props.navigation.navigate('PaymentScreen')}>
+                            <TouchableOpacity onPress={() => (this as any).props.navigation.navigate('PaymentScreen',{'total':0,'amountPayable':(this as any).props.amount})}>
                                 <Text style={{ margin: 5, marginLeft: 10, height: 40, fontSize: 18, paddingTop: 6, backgroundColor: 'orange', textAlign: 'center' }}>CONFIRM</Text>
                             </TouchableOpacity>
                         </View>

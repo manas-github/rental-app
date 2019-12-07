@@ -15,6 +15,7 @@
         "mobx-react": "^5.4.3",
         "native-base": "^2.13.8",
         "react": "16.8.3",
+        "react-captcha-generator": "^1.6.3",
         "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
         "react-native-app-intro-slider": "^1.0.1",
         "react-native-collapsible": "^1.4.0",

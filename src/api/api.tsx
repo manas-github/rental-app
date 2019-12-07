@@ -1,9 +1,9 @@
 import axios from "axios";
 import { AsyncStorage } from 'react-native';
 
-//const baseUrl = "http://192.168.0.127:8184/api/v1";
+const baseUrl = "http://192.168.0.127:8184/api/v1";
 //const baseUrl = "http://192.168.43.206/api/v1";
-const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
+//const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
 
 axios.interceptors.request.use(async function (config) {
     let token = "";
@@ -109,7 +109,7 @@ export class Api {
 
     getCart = async () => {
         let url = this.makeUrl("/cart")
-        return axios.post(url);
+        return axios.get(url);
     }
     getUserToken = async () => {
         let userToken = ''
@@ -165,6 +165,22 @@ export class Api {
 
     getProductTitleBySearch = async (searchKey) => {
         let url = this.makeUrl('/product/keyPressSearch/' + searchKey)
+        return axios.get(url)
+    }
+
+    updateDeliveryAddress = async (deliveryAddress) => {
+        let deliveryAddressToString = deliveryAddress.name + "randSplit" + deliveryAddress.mobile + "randSplit" + deliveryAddress.address + "randSplit" + deliveryAddress.pincode + "randSplit" + deliveryAddress.city
+        let url = this.makeUrl("/user/updateAddress")
+        return axios.post(url,deliveryAddressToString)
+    }
+
+    createOrder = async (payload) =>{
+        let url = this.makeUrl("/order/create")
+        return axios.post(url,payload)
+    }
+
+    getAllOrders = async () => {
+        let url = this.makeUrl("/order")
         return axios.get(url)
     }
 }

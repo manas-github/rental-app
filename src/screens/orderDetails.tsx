@@ -4,34 +4,32 @@ import { observable } from 'mobx'
 import { observer } from "mobx-react"
 import { DEVICE_DIMENSIONS } from './../constant'
 import { MaterialIndicator } from 'react-native-indicators';
+import { Api } from '../api/api';
 
 
 @observer
 export default class OrderDetails extends React.Component<any, any> {
-
-    @observable orderItems = []
-    @observable orderDetails = { "orderItems": [], "orderno": "", "subtotal": "", "discount": "", "tax": "", "total": "" }
+ 
+    @observable api = new Api
+    @observable order = {'orderItems':[],"id":"","orderAmount":"","discount":"","amountPaid":"","amountDue":"","paymentMode":"","orderStatus":{}}
+    @observable orderItemId=""
     componentDidMount = async () => {
-        try {
-            const fetchOrderAPI = 'https://api.myjson.com/bins/12i3z8'
-            const response = await fetch(fetchOrderAPI)
-            this.orderDetails = await response.json()
-            this.orderItems = await this.orderDetails.orderItems
-        }
-        catch {
-            alert('Plese check your internet connection and try again!!')
-        }
+        this.order = (this as any).props.navigation.state.params.order
+        this.orderItemId = (this as any).props.navigation.state.params.orderItemId
     }
     renderItems = (item, index) => {
         return (
             <View key={index}>
                 <View style={styles.orderItem}>
                     <View style={styles.leftView}>
-                        <Text style={styles.productTitle}>{item.title}</Text>
-                        <Text style={styles.duration}>{item.duration} months  |   &#8377; {item.rate} * {item.quantity}</Text>
+                        <Text style={styles.productTitle}>{item.product.title}</Text>
+                        <Text style={styles.duration}>{item.duration} months</Text>
+                    </View>
+                    <View style={styles.midView}>
+                        <Text style={styles.quantity}>X {item.quantity}</Text>
                     </View>
                     <View style={styles.rightView}>
-                        <Text style={styles.price}>&#8377; {item.rate * item.quantity}</Text>
+                        <Text style={styles.price}>&#8377; {item.price * item.quantity}</Text>
                     </View>
                 </View>
                 <View style={styles.horizontalLine} />
@@ -39,14 +37,14 @@ export default class OrderDetails extends React.Component<any, any> {
         );
     }
     render() {
-        if (this.orderItems.length > 0)
+        if (this.order.orderItems.length>0)
             return (
                 <ScrollView>
                     <View style={styles.container}>
                         <View style={styles.receiptTop}>
                             <View style={styles.receiptTopLeft}>
                                 <Text style={{ fontSize: 30 }}>Receipt</Text>
-                                <Text style={{ fontSize: 20, marginTop: 20 }}>{this.orderDetails.orderno}</Text>
+                                <Text style={{ fontSize: 20, marginTop: 20 }}>{this.order.id}</Text>
                             </View>
                             <View style={styles.receiptTopRight}>
                                 <Text style={{ fontSize: 18, paddingTop: 8 }}> Date : 06/01/2019</Text>
@@ -54,23 +52,21 @@ export default class OrderDetails extends React.Component<any, any> {
                             </View>
                         </View>
                         <View style={styles.orderDetailsContainer}>
-                            <Text style={{ color: '#696969' }}>Order Details</Text>
+                            <Text style={{ color: '#696969' }}>Order Details {this.order.orderItems.length>1 && ("(There are multiple items in this order)")}</Text>
                             <View style={styles.orderDetails}>
-                                {this.orderItems.map((val, index) => this.renderItems(val, index))}
+                                {this.order.orderItems.map((val, index) => this.renderItems(val, index))}
                             </View>
                         </View>
                         <View style={styles.calculations}>
                             <View style={styles.leftViewCalculations}>
                                 <Text style={styles.leftViewCalculationsText}>Subtotal</Text>
                                 <Text style={styles.leftViewCalculationsText}>Discount</Text>
-                                <Text style={styles.leftViewCalculationsText}>Tax</Text>
                                 <Text style={styles.leftViewCalculationsText}>Total</Text>
                             </View>
                             <View style={styles.rightViewCalculations}>
-                                <Text style={styles.rightViewCalculationsText}>&#8377; {this.orderDetails.subtotal}</Text>
-                                <Text style={styles.rightViewCalculationsText}>-&#8377; {this.orderDetails.discount}</Text>
-                                <Text style={styles.rightViewCalculationsText}>&#8377; {this.orderDetails.tax}</Text>
-                                <Text style={styles.rightViewCalculationsText}>&#8377; {this.orderDetails.total}</Text>
+                                <Text style={styles.rightViewCalculationsText}>&#8377; {this.order.orderAmount}</Text>
+                                <Text style={styles.rightViewCalculationsText}>-&#8377; {this.order.discount}</Text>
+                                <Text style={styles.rightViewCalculationsText}>&#8377; {parseFloat(this.order.orderAmount)- parseFloat(this.order.discount)}</Text>
                             </View>
                         </View>
                     </View>
@@ -125,12 +121,15 @@ const styles = StyleSheet.create({
         paddingVertical: 8
     },
     leftView: {
-        flex: 0.75
+        flex: 0.65
     },
     rightView: {
-        flex: 0.25,
+        flex: 0.20,
         alignItems: 'flex-end',
 
+    },
+    midView : {
+        flex : 0.15
     },
     productTitle: {
         fontSize: 16,
@@ -140,6 +139,11 @@ const styles = StyleSheet.create({
         fontSize: 12,
         paddingVertical: 4,
         color: '#696969'
+
+    },
+    quantity: {
+        fontSize: 12,
+        paddingVertical: 4,
 
     },
     price: {

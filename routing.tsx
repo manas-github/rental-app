@@ -14,13 +14,14 @@ import Splash from './src/screens/splash'
 import Profile from './src/screens/profile'
 import Subscriptions from './src/screens/subscriptions'
 import OrderDetails from './src/screens/orderDetails'
-import ProductDetails from './src/components/productDetails/productDetails';
+import OrderConfirmation from './src/screens/orderConfirmation';
+import Payment from './src/screens/payment'
 
 const AppStackNavigator = createStackNavigator({
     SplashScreen: {
         screen: Splash,
         navigationOptions: {
-            header: null
+           header: null
         }
     },
     WalkthroughScreen: {
@@ -81,6 +82,12 @@ const AppStackNavigator = createStackNavigator({
     },
     OrderDetailsScreen: {
         screen: OrderDetails
+    },
+    PaymentScreen : {
+        screen : Payment
+    },
+    OrderConfirmationScreen : {
+        screen : OrderConfirmation
     }
 })
 
