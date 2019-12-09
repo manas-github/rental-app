@@ -36,9 +36,9 @@ class Collections extends React.Component<props, any> {
                 <TouchableOpacity onPress={() => this.navigateToProductList('appliances')}>
                     <Image source={require('./../../assets/images/appliance.png')} resizeMode="contain" style={styles.image} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.navigateToProductList('packages')}>
+                {/* <TouchableOpacity onPress={() => this.navigateToProductList('packages')}>
                     <Image source={require('./../../assets/images/package.png')} resizeMode="contain" style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         );
     }
@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flex: 1,
         margin: 1,
-        width: DEVICE_DIMENSIONS.width / 3
+        width: DEVICE_DIMENSIONS.width / 3,
+        marginHorizontal : DEVICE_DIMENSIONS.width/12
 
     },
 });

@@ -13,33 +13,18 @@ class CustomerReviews extends React.Component<any, any> {
     @observable entries: any = [
         {
             title: 'Manas',
-            subtitle: 'Hello friends todaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytodaytoday I am sharing my review about the furlenco.com, friends I am shifted in new city for 3 months because of my studies so in need a table and ...',
-            illustration: 'https://i.imgur.com/SsJmZ9jl.jpg'
+            subtitle: 'Really good product quality, expert people and good tracking.',
+            illustration: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTUiBOaN7WSJeusHsBKHkrGzKzcoZRZohTi3IihpzsqiWgfFuSNw&s'
         },
         {
-            title: 'Favourites landscapes 2',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/5tj6S7Ol.jpg'
+            title: 'Not Manas',
+            subtitle: 'Awesome experience... U name it its all there... Durability Trustworthy Quality ..its top notch in all of it' ,
+            illustration: 'https://i.pinimg.com/originals/4e/fc/da/4efcda6185e98de15c8def9e6bf39a55.jpg'
         },
         {
-            title: 'Favourites landscapes 3',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat',
-            illustration: 'https://i.imgur.com/pmSqIFZl.jpg'
-        },
-        {
-            title: 'Favourites landscapes 4',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/cA8zoGel.jpg'
-        },
-        {
-            title: 'Favourites landscapes 5',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/pewusMzl.jpg'
-        },
-        {
-            title: 'Favourites landscapes 6',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat',
-            illustration: 'https://i.imgur.com/l49aYS3l.jpg'
+            title: 'Another manas',
+            subtitle: 'Bahut hard',
+            illustration: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbJjr_0_zsR5L9L1-77Yk9aMWZcn6fV07pCuj7LRp8QHEXjoMo&s'
         }
     ]
 
@@ -53,18 +38,20 @@ class CustomerReviews extends React.Component<any, any> {
     render() {
         return (
             <View style={styles.container}>
-                <Carousel
-                    layoutCardOffset={18}
-                    data={this.entries}
-                    renderItem={this._renderItem}
-                    sliderWidth={sliderWidth}
-                    itemWidth={itemWidth}
-                    containerCustomStyle={styles.slider}
-                    contentContainerCustomStyle={styles.sliderContentContainer}
-                    layout={'stack'}
-                    loop={true}
-
-                />
+                <Text style={styles.heading}>CUSTOMER LOVES US</Text>
+                <View style={styles.review}>
+                    <Carousel
+                        layoutCardOffset={18}
+                        data={this.entries}
+                        renderItem={this._renderItem}
+                        sliderWidth={sliderWidth}
+                        itemWidth={itemWidth}
+                        containerCustomStyle={styles.slider}
+                        contentContainerCustomStyle={styles.sliderContentContainer}
+                        layout={'stack'}
+                        loop={true}
+                    />
+                </View>
             </View>
         );
     }
@@ -74,11 +61,22 @@ class CustomerReviews extends React.Component<any, any> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        height: 280,
+        height: 340,
         backgroundColor: '#fff',
+        
+    },
+    review : {
+        height: 300,
         alignItems: 'center',
         justifyContent: 'center',
     },
+    heading: {
+        fontSize: 18,
+        padding: 10,
+        marginLeft: 10,
+        color: 'grey',
+        fontWeight: '600'
+    }
 });
 
 export default CustomerReviews;

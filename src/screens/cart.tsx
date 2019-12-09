@@ -6,6 +6,13 @@ import UserCart from './../components/cart/userCart'
 @observer
 export default class Cart extends React.Component {
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "CART"
+        }
+
+    };
+
     render() {
         return (
             <View style={styles.container}>

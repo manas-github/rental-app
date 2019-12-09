@@ -9,18 +9,57 @@ import { Api } from '../api/api';
 @observer
 export default class Checkout extends React.Component {
    
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "CHECKOUT"
+        }
+
+    };
+
     @observable deliveryAddress= {name: "",mobile:"",address:"",pincode:"",city:""}
     @observable api = new Api()
-    @observable confirmPressed = async () => {
-        try {
-            const res = await this.api.updateDeliveryAddress(this.deliveryAddress);
-            if (res && res.data) {
-                (this as any).props.navigation.navigate('PaymentScreen',{'totalDiscount':0,'amountPayable':(this as any).props.navigation.state.params.totalAmount})
-            } 
-        } catch (error) {
+    @observable isValidated = false
 
+    @observable confirmPressed = async () => {
+        this.validateFields()
+        if(this.isValidated){
+            try {
+                const res = await this.api.updateDeliveryAddress(this.deliveryAddress);
+                if (res && res.data) {
+                    (this as any).props.navigation.navigate('PaymentScreen',{'totalDiscount':0,'amountPayable':(this as any).props.navigation.state.params.totalAmount})
+                } 
+            } catch (error) {
+
+            }
+        }
+        else {
+            alert("Enter proper address")
         }
     }
+
+    validateFields = () => {
+        if(this.deliveryAddress.name.length>2 && this.deliveryAddress.city.length>2 && this.deliveryAddress.address.length>2 && this.deliveryAddress.mobile.length>2 && this.deliveryAddress.pincode.length>2)
+            this.isValidated = true
+    }
+
+    componentDidMount = async () => {
+        try {
+            const res = await this.api.getUser()
+            if(res && res.data) {
+                if(res.data.firstName!=null){
+                    this.deliveryAddress.name = res.data.firstName 
+                }
+                if(res.data.lastName!=null){
+                    this.deliveryAddress.name += " "+res.data.lastName 
+                }
+                if(res.data.mobile!=null){
+                    this.deliveryAddress.mobile = res.data.mobile
+                }
+            }
+        } catch (error){
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -28,6 +67,7 @@ export default class Checkout extends React.Component {
                     <View style={styles.status}/>
                     <ScrollView>
                         <View>
+                            <Text style={{textAlign:"center",padding:10}}>SHIPPING ADDRESS</Text>
                             <Text style={styles.inputTitle}>Name</Text>
                             <TextInput
                                 style={styles.input}

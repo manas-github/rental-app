@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Alert,View, TouchableOpacity } from 'react-native';
 import { observable } from 'mobx'
 import { observer } from "mobx-react"
 import {} from "../constant";
@@ -7,6 +7,13 @@ import { Api } from '../api/api';
 
 @observer
 export default class Payment extends React.Component<any, any> {
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "PAYMENT"
+        }
+
+    };
 
     @observable api = new Api()
     @observable viewPaymentSummary : Boolean = false;
@@ -44,6 +51,44 @@ export default class Payment extends React.Component<any, any> {
         }
     }
 
+    processOnlinePaymentSuccess = async () => {
+        let payload = {
+    
+            "amountPaid": this.amountPayable,
+            "discount": this.discount,
+            "totalAmount": this.total,
+            "amountDue" : 0,
+            "paymentMode" : "ONLINE"
+        }
+        try {
+            const res = await this.api.createOrder(payload);
+            if (res && res.data) {
+                (this as any).props.navigation.navigate('OrderConfirmationScreen',{"orderId":res.data,"status":"success"})
+            } 
+        } catch (error) {
+
+        }
+    }
+
+    processOnlinePaymentFailed = async () => {
+        (this as any).props.navigation.navigate('OrderConfirmationScreen',{"status":"failed"})
+    }
+    processOnlinePayment = async () => {
+        Alert.alert(
+            'Online payment testing',
+            '',
+            [
+              {
+                text: 'Test payment failed',
+                onPress: () => this.processOnlinePaymentFailed(),
+                style: 'cancel',
+              },
+              {text: 'Test payment success', onPress: () => this.processOnlinePaymentSuccess()},
+            ],
+            {cancelable: false},
+          );
+    }
+
     render() {
         return (
             <View class="container">
@@ -71,12 +116,12 @@ export default class Payment extends React.Component<any, any> {
                         <Text style={styles.paymentModeText}>Cash/Card on delivery</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.processOnlinePayment}>
                     <View style={styles.paymentModeLabel}>
                         <Text style={styles.paymentModeText}>Paypal</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.processOnlinePayment}>
                     <View style={styles.paymentModeLabel}>
                         <Text style={styles.paymentModeText}>Paytm</Text>
                     </View>

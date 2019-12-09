@@ -1,9 +1,9 @@
 import axios from "axios";
 import { AsyncStorage } from 'react-native';
 
-const baseUrl = "http://192.168.0.127:8184/api/v1";
+const baseUrl = "http://192.168.0.126:8184/api/v1";
 //const baseUrl = "http://192.168.43.206/api/v1";
-//const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
+// const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
 
 axios.interceptors.request.use(async function (config) {
     let token = "";
@@ -169,7 +169,9 @@ export class Api {
     }
 
     updateDeliveryAddress = async (deliveryAddress) => {
+        console.log(deliveryAddress.address)
         let deliveryAddressToString = deliveryAddress.name + "randSplit" + deliveryAddress.mobile + "randSplit" + deliveryAddress.address + "randSplit" + deliveryAddress.pincode + "randSplit" + deliveryAddress.city
+        console.log(deliveryAddressToString)
         let url = this.makeUrl("/user/updateAddress")
         return axios.post(url,deliveryAddressToString)
     }

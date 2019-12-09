@@ -173,7 +173,7 @@ export default class ProductDetails extends React.Component<props, any> {
                             </View>
                         </View>
                         <ContentDivider />
-                        <View style={styles.guarantee}>
+                        {/* <View style={styles.guarantee}>
                             <Text>Our promise</Text>
                             <Text>Free shipping</Text>
                             <Text>Free setup</Text>
@@ -182,7 +182,7 @@ export default class ProductDetails extends React.Component<props, any> {
                             <Text>Free shipping</Text>
                             <Text>Free setup</Text>
                             <Text>Free relocation</Text>
-                        </View>
+                        </View> */}
                         <View>
                             <Text>Share</Text>
                         </View>
@@ -286,7 +286,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         textAlignVertical: "center",
-        height: 50
+        height: 50,
+        color:'white'
 
 
     },

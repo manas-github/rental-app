@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, AsyncStorage } from 'react-native';
+import { StyleSheet, ScrollView, View, Dimensions, AsyncStorage } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Home from './home'
 import Signup from './signup'
@@ -34,12 +34,14 @@ export default class Walkthrough extends React.Component {
             );
         } else {
             return (
-                <AppIntroSlider
-                    slides={slides}
-                    onDone={this._onDone}
-                    showSkipButton={true}
-                    onSkip={this._onSkip}
-                />
+                    <View style={styles.container}>
+                        <AppIntroSlider
+                            slides={slides}
+                            onDone={this._onDone}
+                            showSkipButton={true}
+                            onSkip={this._onSkip}
+                        />
+                    </View>
             );
         }
     }
@@ -61,6 +63,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 16,
     },
+    container : {
+        flex:1,
+        paddingTop:32
+    }
 });
 
 const slides = [

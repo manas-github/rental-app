@@ -23,6 +23,10 @@ export default class UserCart extends React.Component<any, any> {
         this.loadCart();
     }
 
+    navigateToHome = () => {
+        (this as any).props.navigation.navigate('HomeScreen')
+    }
+
     loadCart = async () => {
         try {
             const res = await this.api.getCart();
@@ -60,10 +64,7 @@ export default class UserCart extends React.Component<any, any> {
     }
 
     save = (productId, duration) => {
-        // this.savedItems.id.push(this.cartItems.id[index])
-        // this.savedItems.tenure.push(this.cartItems.tenure[index])
-        // this.savedItems.quantity.push(this.cartItems.quantity[index])
-        // this.deleteFromCart(index)
+        alert("feature implementation under progress..")
     }
 
     changeQuantity = async (type: string, quantity: any, duration: any, productId: any) => {
@@ -176,10 +177,21 @@ export default class UserCart extends React.Component<any, any> {
                     />
                 </View>
             )
-        if ((this.cartLoaded && this.cart.id != null && this.cart.user != null) && (this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length == 0))
+        if (this.cartLoaded && this.cart.user && (!this.cart.cartItem || this.cart.cartItem.length==0))
             return (
                 <View style={styles.container}>
-                    <Text>Your cart is empty</Text>
+                    <Image
+                        style={styles.empty}
+                        source={require('./../../assets/images/empty.png')}
+                    />
+                    <Text style={styles.emptyText}>
+                        Looks like you haven't added anything to your cart
+                    </Text>
+                    <TouchableOpacity onPress={this.navigateToHome}>
+                        <Text style={styles.continueBtn}>
+                            Continue shopping
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             )
         else if (this.cartLoaded && this.cart && this.cart.cartItem && this.cart.cartItem.length > 0)
@@ -216,5 +228,23 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         borderColor: '#DCDCDC',
         backgroundColor: '#eee9e9'
+    },
+    empty : {
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:"center",
+        alignSelf:"center"
+    },
+    emptyText : {
+        textAlign:"center",
+    },
+    continueBtn : {
+        marginHorizontal:60,
+        backgroundColor:"rgb(234, 163, 61)",
+        height:40,
+        textAlign:"center",
+        paddingTop:10,
+        marginTop:20
     }
+
 });

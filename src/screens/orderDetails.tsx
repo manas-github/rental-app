@@ -10,12 +10,26 @@ import { Api } from '../api/api';
 @observer
 export default class OrderDetails extends React.Component<any, any> {
  
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "RECEIPT"
+        }
+
+    };
+
     @observable api = new Api
     @observable order = {'orderItems':[],"id":"","orderAmount":"","discount":"","amountPaid":"","amountDue":"","paymentMode":"","orderStatus":{}}
     @observable orderItemId=""
+    @observable paymentStatus = ""
+
     componentDidMount = async () => {
         this.order = (this as any).props.navigation.state.params.order
         this.orderItemId = (this as any).props.navigation.state.params.orderItemId
+        if(this.order.paymentMode=="COD"){
+            this.paymentStatus="Cash on delivery"
+        } else if(this.order.paymentMode=="ONLINE")
+            this.paymentStatus="Paid"
     }
     renderItems = (item, index) => {
         return (
@@ -48,7 +62,7 @@ export default class OrderDetails extends React.Component<any, any> {
                             </View>
                             <View style={styles.receiptTopRight}>
                                 <Text style={{ fontSize: 18, paddingTop: 8 }}> Date : 06/01/2019</Text>
-                                <Text style={{ fontSize: 18, marginTop: 24 }}>Paid</Text>
+                                <Text style={{ fontSize: 18, marginTop: 24 }}>{this.paymentStatus}</Text>
                             </View>
                         </View>
                         <View style={styles.orderDetailsContainer}>

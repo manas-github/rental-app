@@ -102,8 +102,8 @@ class Home extends React.Component {
                             <HomeImageSlider />
                             <Collections navigation={(this as any).props.navigation} />
                             <Trending navigation={(this as any).props.navigation} />
-                            <News />
-                            <Sponsored />
+                            {/* <News /> */}
+                            {/* <Sponsored /> */}
                             <VideoMessages />
                             <CustomerReview />
                         </ScrollView>
@@ -145,7 +145,7 @@ class Home extends React.Component {
                                             <Text style={styles.optionText}>My Subscription</Text>
                                         </View>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.modalOptions} onPress={() => (this as any).props.navigation.navigate('PaymentScreen')}>
+                                    {/* <TouchableOpacity style={styles.modalOptions} onPress={() => (this as any).props.navigation.navigate('PaymentScreen')}>
                                         <View style={styles.ModalOptionRow}>
                                             <Icon
                                                 name="ios-star-outline"
@@ -153,7 +153,7 @@ class Home extends React.Component {
                                             />
                                             <Text style={styles.optionText}>Payments</Text>
                                         </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                     <TouchableOpacity style={styles.modalOptions} onPress={() => (this as any).props.navigation.navigate('SubscriptionsScreen')}>
                                         <View style={styles.ModalOptionRow}>
                                             <Icon

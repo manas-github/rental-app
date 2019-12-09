@@ -14,6 +14,13 @@ export default class Subscriptions extends React.Component<any, any> {
     @observable orders = []
     @observable isLoaded = false;
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "ORDERS"
+        }
+
+    };
+
     componentDidMount = async () => {
         try {
             const res = await this.api.getAllOrders();
@@ -65,7 +72,7 @@ export default class Subscriptions extends React.Component<any, any> {
             return (
                 <ScrollView>
                     <View style={styles.container}>
-                        {this.orders.map((val, index) => this.renderOrder(val, index))}
+                        {this.orders.reverse().map((val, index) => this.renderOrder(val, index))}
                     </View>
                 </ScrollView>
             );
