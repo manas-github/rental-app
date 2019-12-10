@@ -1,17 +1,16 @@
 {
     "expo": {
-        "name": "voorent",
-        "slug": "voorent",
+        "name": "Rentigo",
+        "slug": "Rentigo",
         "privacy": "public",
         "sdkVersion": "33.0.0",
         "platforms": [
             "ios",
-            "android",
-            "web"
+            "android"
         ],
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/icon.png",
+        "icon": "./src/assets/images/appicon.png",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -24,7 +23,11 @@
             "**/*"
         ],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+           "bundleIdentifier":"com.manas.rentigo"
+        },
+        "android": {
+            "package": "com.manas.rentigo"
         }
     }
 }

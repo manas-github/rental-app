@@ -1,9 +1,9 @@
 import axios from "axios";
 import { AsyncStorage } from 'react-native';
 
-const baseUrl = "http://192.168.0.126:8184/api/v1";
+//const baseUrl = "http://192.168.0.126:8184/api/v1";
 //const baseUrl = "http://192.168.43.206/api/v1";
-// const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
+const baseUrl = "https://manas-rental-serverapp.herokuapp.com/api/v1"
 
 axios.interceptors.request.use(async function (config) {
     let token = "";

@@ -74,7 +74,14 @@ export default class Login extends Component {
             try {
                 const res = await this.api.signIn(this.email, this.password);
                 if (res && res.data) {
-                    if (res.data) {
+                    if(res.data=="inactive"){
+                        this.showToast = true;
+                        this.toastMsg = "Your account is inactive. Please check you email for verification steps!!"
+                        setTimeout(() => {
+                            this.showToast = false;
+                        }, 3500);
+                    }
+                    else if (res.data) {
                         try {
                             await AsyncStorage.setItem('Token', res.data);
                             await AsyncStorage.setItem('loggedIn', 'true')

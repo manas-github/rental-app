@@ -79,7 +79,7 @@ export default class Listing extends React.Component<props, any> {
             );
         else if (this.isLoaded)
             return (
-                <Text>No such product found</Text>
+                <Text style={{textAlign:"center"}}>No such product found</Text>
             )
         else
             return (
