@@ -72,7 +72,7 @@ export default class Subscriptions extends React.Component<any, any> {
             return (
                 <ScrollView>
                     <View style={styles.container}>
-                        {this.orders.reverse().map((val, index) => this.renderOrder(val, index))}
+                        {this.orders.slice().reverse().map((val, index) => this.renderOrder(val, index))}
                     </View>
                 </ScrollView>
             );

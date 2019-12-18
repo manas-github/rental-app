@@ -16,19 +16,22 @@ class Topbar extends React.Component<any, any> {
         super(props);
         this.navigation = (this as any).props.navigation;
     }
-
+    @observable focusListener;
     @observable cartCount = 0;
 
     componentDidMount = async () => {
-        let api = new Api()
-        try {
-            const res = await api.getCartItemCount();
-            if (res && res.data) {
-                this.cartCount = res.data
+        this.focusListener = this.navigation.addListener('didFocus', async () => {
+            let api = new Api()
+            try {
+                const res = await api.getCartItemCount();
+                if (res && res.data) {
+                    this.cartCount = res.data
+                }
+            } catch (error) {
+                this.cartCount = -1;
             }
-        } catch (error) {
-            this.cartCount = -1;
-        }
+        });
+        
     }
 
     navigateToCart = () => {

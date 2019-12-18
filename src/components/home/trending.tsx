@@ -15,7 +15,7 @@ export default class Trending extends React.Component<any, any> {
 
     componentDidMount = async () => {
         try {
-            const res = await this.api.getTrendingProducts(2);
+            const res = await this.api.getTrendingProducts(4);
             if (res && res.data) {
                 this.data = res.data;
                 this.isLoaded = true
