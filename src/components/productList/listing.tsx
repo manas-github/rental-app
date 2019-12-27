@@ -91,6 +91,7 @@ export default class Listing extends React.Component<props, any> {
                         size={20}
                     />
                 </View>
+
             );
     }
 }

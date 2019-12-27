@@ -14,9 +14,11 @@
         "mobx": "^5.9.0",
         "mobx-react": "^5.4.3",
         "native-base": "^2.13.8",
+        "newman": "^4.5.7",
         "react": "16.8.3",
         "react-captcha-generator": "^1.6.3",
         "react-dom": "^16.12.0",
+        "react-loading-skeleton": "^1.3.0",
         "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
         "react-native-app-intro-slider": "^1.0.1",
         "react-native-collapsible": "^1.4.0",
@@ -36,7 +38,8 @@
         "react-native-vector-icons": "^6.3.0",
         "react-native-video": "^5.0.2",
         "react-native-web": "^0.11.7",
-        "react-navigation": "^3.1.2"
+        "react-navigation": "^3.1.2",
+        "unirest": "^0.6.0"
     },
     "devDependencies": {
         "@types/node": "^11.9.5",

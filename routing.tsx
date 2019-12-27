@@ -19,7 +19,7 @@ import Payment from './src/screens/payment'
 
 const AppStackNavigator = createStackNavigator({
     SplashScreen: {
-        screen: Splash,
+        screen: Signup,
         navigationOptions: {
            header: null
         }

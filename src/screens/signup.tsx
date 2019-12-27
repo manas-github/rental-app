@@ -26,20 +26,25 @@ export default class Signup extends Component {
     @observable email = ''
     @observable phone = ''
     @observable password = ''
+    @observable otp ='';
     @observable nameError = false
     @observable emailError = false
     @observable phoneError = false
     @observable passwordError = false
+    @observable otpError = false;
     @observable showEmailErrorMessage = false;
     @observable showNameErrorMessage = false;
     @observable showPasswordErrorMessage = false;
     @observable showPhoneErrorMessage = false;
+    @observable showOtpErrorMessage=false
+    @observable otpVerified = false
     @observable errorMessagePassword = 'Minimum eight characters, at least one uppercase letter, one lowercase letter and one number & one special character'
     @observable regex = {
         'name': new RegExp(/^[a-zA-Z ]{3,25}$/),
         'email': new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
         'password': new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-        'mobile': new RegExp(/^[6-9]\d{9}$/)
+        'mobile': new RegExp(/^[6-9]\d{9}$/),
+        'otp' : new RegExp(/^\d{5}$/)
     }
     @observable api = new Api()
     @observable showToast: boolean = false
@@ -50,40 +55,86 @@ export default class Signup extends Component {
         (this.regex.name.test(this.name)) ? this.nameError = false : this.nameError = true;
         (this.regex.email.test(this.email)) ? this.emailError = false : this.emailError = true;
         (this.regex.mobile.test(this.phone)) ? this.phoneError = false : this.phoneError = true;
-        (this.regex.password.test(this.password)) ? ((this.passwordError = false) && (pwdError = false)) : ((this.passwordError = true) && (pwdError = true))
+        (this.regex.password.test(this.password)) ? ((this.passwordError = false) && (pwdError = false)) : ((this.passwordError = true) && (pwdError = true));
+        (this.regex.otp.test(this.otp)) ? this.otpError = false : this.otpError = true
+    }
+
+    verifyOtp = async () => {
+        try{
+            const res = await this.api.verifyOtp(this.phone,this.otp)
+            if(res && res.data && res.data==true){
+                this.otpVerified = true;
+            } else{
+                this.showToast = true;
+                this.toastMsg = "Incorrect OTP entered"
+                setTimeout(() => {
+                    this.showToast = false;
+                    this.waiting = false;
+                }, 2500);
+            }
+        } catch (error){
+            this.waiting = false;
+        } finally {
+        }
     }
 
     signInClicked = async () => {
         this.validate()
-        if (!this.nameError && !this.passwordError && !this.phoneError && !this.emailError) {
+        if (!this.nameError && !this.passwordError && !this.phoneError && !this.emailError && !this.otpError) {
             this.waiting = true
-            try {
-                let nameArray = this.name.split(' ')
-                let firstName = nameArray[0]
-                let lastName = this.name.substring(firstName.length)
-                const res = await this.api.signUp(firstName, lastName, this.email, this.password, this.phone);
-                if (res && res.data) {
-                    if (res.data === true) {
-                        this.showToast = true;
-                        this.toastMsg = "Account created"
-                        setTimeout(() => {
-                            this.showToast = false;
-                            (this as any).props.navigation.navigate('LoginScreen')
-                        }, 2500);
+            await this.verifyOtp();
+            if(this.otpVerified){
+                try {
+                    let nameArray = this.name.split(' ')
+                    let firstName = nameArray[0]
+                    let lastName = this.name.substring(firstName.length)
+                    const res = await this.api.signUp(firstName, lastName, this.email, this.password, this.phone);
+                    if (res && res.data) {
+                        if (res.data === true) {
+                            this.showToast = true;
+                            this.toastMsg = "Account created"
+                            setTimeout(() => {
+                                this.showToast = false;
+                                (this as any).props.navigation.navigate('LoginScreen')
+                            }, 2500);
+                        }
+                        else {
+                            this.showToast = true;
+                            this.toastMsg = "Account already exist"
+                            setTimeout(() => {
+                                this.showToast = false;
+                            }, 2500);
+                        }
                     }
-                    else {
-                        this.showToast = true;
-                        this.toastMsg = "Account already exist"
-                        setTimeout(() => {
-                            this.showToast = false;
-                        }, 2500);
-                    }
+                } catch (error) {
                 }
-            } catch (error) {
+                finally {
+                    this.waiting = false
+                }
             }
-            finally {
-                this.waiting = false
+        }
+    }
+
+    sendOtp = async () => {
+        console.log("called")
+        if(this.regex.mobile.test(this.phone)){
+            try{
+                const res = await this.api.sendOtp(this.phone)
+                console.log(res)
+                if(res && res.data) {
+                    console.log(res.data)
+                    this.showToast = true;
+                    this.toastMsg = "OTP sent"
+                    setTimeout(() => {
+                        this.showToast = false;
+                    }, 2500);
+                }
+            } catch(error){
+
             }
+        } else {
+            this.phoneError=true;
+            this.showPhoneErrorMessage=true;
         }
     }
 
@@ -92,6 +143,7 @@ export default class Signup extends Component {
         this.showNameErrorMessage = false;
         this.showPasswordErrorMessage = false;
         this.showPhoneErrorMessage = false;
+        this.showOtpErrorMessage = false;
     }
 
     render() {
@@ -111,20 +163,6 @@ export default class Signup extends Component {
                         />
                         {this.nameError && <View style={styles.alertIcon}><TouchableOpacity onPress={() => { this.hideErrorMessages(); this.showNameErrorMessage = true }}><Icon name={'ios-alert'} size={28} color={'#CC3300'} /></TouchableOpacity></View>}
                         {this.showNameErrorMessage && <Text style={styles.errorText}>Enter valid name</Text>}
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Icon name={'ios-call'} size={28} color={'rgba(255,255,255,0.7)'} style={styles.inputIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder={'Mobile'}
-                            placeholderTextColor={'rgba(255,255,255,0.7)'}
-                            underlinecolorAndroid='transparent'
-                            onChangeText={(value) => this.phone = value}
-                            onFocus={() => this.hideErrorMessages()}
-
-                        />
-                        {this.phoneError && <TouchableOpacity style={styles.alertIcon} onPress={() => { this.hideErrorMessages(); this.showPhoneErrorMessage = true }}><Icon name={'ios-alert'} size={28} color={'#CC3300'} /></TouchableOpacity>}
-                        {this.showPhoneErrorMessage && <Text style={styles.errorText}>Enter valid mobile no</Text>}
                     </View>
                     <View style={styles.inputContainer}>
                         <Icon name={'ios-mail'} size={28} color={'rgba(255,255,255,0.7)'} style={styles.inputIcon} />
@@ -148,8 +186,8 @@ export default class Signup extends Component {
                             secureTextEntry={!this.showPassword}
                             placeholderTextColor={'rgba(255,255,255,0.7)'}
                             underlinecolorAndroid='transparent'
-                            onChangeText={(value) => this.password = value}
-                            onFocus={() => this.hideErrorMessages()}
+                            onChangeText={(value) => {this.password = value; this.passwordError = false}}
+                            onFocus={() =>{ this.hideErrorMessages();}}
 
                         />
                         {!this.passwordError ?
@@ -164,6 +202,39 @@ export default class Signup extends Component {
                         {this.passwordError && <TouchableOpacity style={styles.alertIcon} onPress={() => { this.hideErrorMessages(); this.showPasswordErrorMessage = true }}><Icon name={'ios-alert'} size={28} color={'#CC3300'} /></TouchableOpacity>}
                         {this.showPasswordErrorMessage && <Text style={styles.errorText}>{this.errorMessagePassword}</Text>}
                     </View>
+                    <View style={styles.inputContainer}>
+                        <Icon name={'ios-call'} size={28} color={'rgba(255,255,255,0.7)'} style={styles.inputIcon} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder={'Mobile'}
+                            placeholderTextColor={'rgba(255,255,255,0.7)'}
+                            underlinecolorAndroid='transparent'
+                            onChangeText={(value) => {this.phone = value;this.phoneError = false;}}
+                            onFocus={() => this.hideErrorMessages()}
+
+                        />
+                        <TouchableOpacity style={styles.eyeIcon} onPress={() => this.sendOtp()}>
+                            <Icon name={'ios-send'} size={28} color={'rgba(255,255,255,0.7)'} />                        
+                        </TouchableOpacity>
+                        {this.phoneError && <TouchableOpacity style={styles.alertIcon} onPress={() => { this.hideErrorMessages(); this.showPhoneErrorMessage = true }}><Icon name={'ios-alert'} size={28} color={'#CC3300'} /></TouchableOpacity>}
+                        {this.showPhoneErrorMessage && <Text style={styles.errorText}>Enter valid mobile no</Text>}
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Icon name={'ios-grid'} size={28} color={'rgba(255,255,255,0.7)'} style={styles.inputIcon} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder={'OTP'}
+                            placeholderTextColor={'rgba(255,255,255,0.7)'}
+                            underlinecolorAndroid='transparent'
+                            onChangeText={(value) => this.otp = value}
+                            onFocus={() => this.hideErrorMessages()}
+
+                        />
+                        {this.otpError && <TouchableOpacity style={styles.alertIcon} onPress={() => { this.hideErrorMessages(); this.showOtpErrorMessage = true }}><Icon name={'ios-alert'} size={28} color={'#CC3300'} /></TouchableOpacity>}
+                        {this.showOtpErrorMessage && <Text style={styles.errorText}>Invalid Otp</Text>}
+                    </View>
+
+                    
                     <TouchableOpacity onPress={() => (this as any).props.navigation.navigate('LoginScreen')}>
                         <Text style={styles.signinText}>Already have an account?</Text>
                     </TouchableOpacity>

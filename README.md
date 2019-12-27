@@ -1,4 +1,4 @@
-# Rental Application
+# Rental Application ([Download apk](https://exp-shell-app-assets.s3.us-west-1.amazonaws.com/android/%40manas761/Rentigo-dd25c5db8314490db8aa7c856e47fe9e-signed.apk))
 A cross-platform (iOS & Android) e- commerce mobile application to facilitate the process of renting furniture. This project has been developed using React native, TypeScript, MobX and CSS. The back - end of this project was also developed and is available [here](https://github.com/manas-github/rental-serverapp-springboot "Rental Application Backend").
 
 The major functional feature of this project includes :

@@ -184,4 +184,16 @@ export class Api {
         let url = this.makeUrl("/order")
         return axios.get(url)
     }
+
+    sendOtp = async (mobile) => {
+        let payload = {"mobile":mobile}
+        let url = this.makeUrl("/signup/sendOtp").replace("/api/v1", "")
+        return axios.post(url,payload);
+    }
+
+    verifyOtp = async (mobile,otp) => {
+        let payload = {"mobile": mobile,"otp":otp}
+        let url = this.makeUrl("/signup/verifyOtp").replace("/api/v1","")
+        return axios.post(url,payload)
+    }
 }
