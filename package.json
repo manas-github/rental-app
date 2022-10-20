@@ -10,7 +10,7 @@
         "@ant-design/icons-react-native": "^1.0.2",
         "@babel/plugin-proposal-decorators": "^7.3.0",
         "axios": "^0.18.1",
-        "expo": "^33.0.7",
+        "expo": "^46.0.16",
         "mobx": "^5.9.0",
         "mobx-react": "^5.4.3",
         "native-base": "^2.13.8",
