@@ -14,7 +14,7 @@
         "mobx": "^5.9.0",
         "mobx-react": "^5.4.3",
         "native-base": "^2.13.8",
-        "newman": "^4.6.1",
+        "newman": "^6.0.0",
         "react": "16.8.3",
         "react-captcha-generator": "^1.6.3",
         "react-dom": "^16.12.0",
